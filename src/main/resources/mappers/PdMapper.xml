@@ -1,0 +1,347 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.project.UsERP.persistence.PdDAO">
+   
+   <resultMap id="BuyMap" type="com.project.UsERP.vo.AccountStatementVO">
+      <id      property="accs_code"   column="accs_code"/>
+      <result   property="accs_type"   column="accs_type"/>
+      <result   property="accs_content"   column="accs_content"/>
+      <result   property="accs_price"   column="accs_price"/>
+      <result   property="accs_quantity" column="accs_quantity"/>
+      <result   property="accs_reg_date" column="accs_reg_date"/>
+      <result   property="accs_update_date"   column="accs_update_date"/>
+      <result   property="accs_state"   column="accs_state"/>
+      <result   property="accs_sum"      column="accs_sum"/>
+      <result   property="emp_code"      column="emp_code"/>
+      <result   property="pro_code"      column="pro_code"/>
+      <result   property="com_code"      column="com_code"/>
+      <association property="employee" javaType="com.project.UsERP.vo.EmployeeVO">
+         <id      property="emp_code"   column="emp_code"/>
+         <result   property="emp_name"   column="emp_name"/>
+      </association>
+      <association property="product" javaType="com.project.UsERP.vo.ProductVO">
+         <id      property="pro_code"   column="pro_code"/>
+         <result   property="pro_name"   column="pro_name"/>
+         <result   property="pro_sal_price" column="pro_sal_price"/>
+         <result   property="pro_pur_price" column="pro_pur_price"/>
+      </association>
+      <association property="company" javaType="com.project.UsERP.vo.CompanyVO">
+         <id      property="com_code"   column="com_code"/>
+         <result   property="com_name"   column="com_name"/>
+      </association>
+   </resultMap>
+   
+   <resultMap id="LogsMap" type="com.project.UsERP.vo.LogisticsStatementVO">
+      <id      property="logs_code"   column="logs_code"/>
+      <result   property="logs_type"   column="logs_type"/>
+      <result   property="logs_reg_date"   column="logs_reg_date"/>
+      <result   property="logs_update_date"   column="logs_update_date"/>
+      <result   property="logs_state" column="logs_state"/>
+      <result   property="logs_quantity" column="logs_quantity"/>
+      <result   property="logs_shortage"   column="logs_shortage"/>
+      <result   property="com_code"   column="com_code"/>
+      <result   property="sto_code"   column="sto_code"/>
+      <result   property="pro_code"      column="pro_code"/>
+      <result   property="emp_code"      column="emp_code"/>
+      <result   property="ware_code"      column="ware_code"/>
+      <association property="employee" javaType="com.project.UsERP.vo.EmployeeVO">
+         <id      property="emp_code"   column="emp_code"/>
+         <result   property="emp_name"   column="emp_name"/>
+      </association>
+      <association property="product" javaType="com.project.UsERP.vo.ProductVO">
+         <id      property="pro_code"   column="pro_code"/>
+         <result   property="pro_name"   column="pro_name"/>
+         <result   property="pro_sal_price" column="pro_sal_price"/>
+         <result   property="pro_pur_price" column="pro_pur_price"/>
+      </association>
+      <association property="company" javaType="com.project.UsERP.vo.CompanyVO">
+         <id      property="com_code"   column="com_code"/>
+         <result   property="com_name"   column="com_name"/>
+      </association>
+      <association property="warehouse" javaType="com.project.UsERP.vo.WarehouseVO">
+         <id      property="ware_code"   column="ware_code"/>
+         <result   property="ware_name"   column="ware_name"/>
+      </association>
+   </resultMap>
+   
+   <!-- 김민수 - 재고VO resultMap -->
+	<resultMap id="stockVOMap" type="com.project.UsERP.vo.StockVO">
+		<id property="sto_code" column="sto_code" />
+		<result property="sto_quantity" column="sto_quantity" />
+		<result property="sto_reg_date" column="sto_reg_date" />
+		<result property="ware_code" column="ware_code" />
+		<result property="pro_code" column="pro_code" />
+		<association property="warehouse" javaType="com.project.UsERP.vo.WarehouseVO">
+			<id property="ware_code" column="ware_code" />
+			<result property="ware_name" column="ware_name" />
+			<result property="ware_location" column="ware_location" />
+			<result property="ware_state" column="ware_state" />
+		</association>
+		<association property="product" javaType="com.project.UsERP.vo.ProductVO">
+			<id property="pro_code" column="pro_code" />
+			<result property="pro_name" column="pro_name" />
+			<result property="pro_pur_price" column="pro_pur_price" />
+			<result property="pro_sal_price" column="pro_sal_price" />
+			<result property="pro_state" column="pro_state" />
+			<result property="pro_reg_date" column="pro_reg_date" />
+		</association>
+	</resultMap>
+   
+   <!-- 김민수 - 재고관리 - 재고 현황 갯수 -->
+	<select id="getStockCnt" resultType="int">
+		SELECT COUNT(*) as cnt
+		FROM stock s,product p, warehouse w
+		WHERE s.pro_code = p.pro_code
+		AND s.ware_code = w.ware_code
+		AND w.ware_state = 1
+		AND p.pro_state = 1
+		AND p.pro_name LIKE '%'||#{ssKeyword}||'%'
+	</select>
+	
+	<!-- 김민수 - 재고관리 - 재고 현황 조회 -->
+	<select id="StockStatusList" resultMap="stockVOMap" parameterType="java.util.Map">
+		<![CDATA[
+			SELECT * 
+			FROM (SELECT sto_code, sto_quantity, sto_reg_date, ware_code, pro_code, ware_name, pro_name, 
+        			pro_pur_price, pro_sal_price, pro_state, rownum rnum
+			    FROM(SELECT s.*, w.ware_name, p.pro_name, p.pro_pur_price, 
+            			p.pro_sal_price, p.pro_state
+			        FROM stock s, warehouse w, product p
+			        WHERE s.ware_code = w.ware_code
+			        AND s.pro_code = p.pro_code
+			        AND w.ware_state = 1
+			        AND p.pro_state = 1
+			        AND p.pro_name LIKE '%'||#{ssKeyword}||'%'
+			        ORDER BY s.pro_code, s.ware_code
+			        )
+				)
+			WHERE rnum >= #{start}
+			AND rnum <= #{end}
+		]]>
+	</select>
+   
+   <!-- 이재홍 - 구매 현황 - 구매 내역 & 승인 내역 -->
+   <select id = "buyList" resultMap = "BuyMap">
+         SELECT a.*, c.com_name, p.pro_name, e.emp_name
+           FROM account_statement a, employee e, product p, company c
+          WHERE a.emp_code = e.emp_code
+          AND a.pro_code = p.pro_code
+          AND a.com_code = c.com_code
+          ORDER BY accs_code DESC
+   </select>
+   
+   <!-- 이재홍 - 구매 현황 - 구매 전표 상세 페이지 -->
+   <select id="pdStatementDetail" resultMap="BuyMap">
+      SELECT a.*, p.pro_name, c.com_name, e.emp_name 
+      FROM employee e, account_statement a, product p, company c
+      WHERE a.emp_code = e.emp_code
+      AND a.pro_code = p.pro_code
+      AND a.com_code = c.com_code
+      AND accs_code = #{num}
+      ORDER BY accs_code DESC
+   </select>
+   
+   <!-- 이재홍 - 구매 현황 - 구매 전표 등록 -->
+   <insert id="insertBuyStatement" parameterType = "com.project.UsERP.vo.AccountStatementVO">
+     INSERT INTO account_statement(accs_code, accs_type, accs_content, accs_price, accs_quantity, accs_reg_date, accs_update_date, accs_sum, accs_state, emp_code, bank_code, acco_code, pro_code, com_code)
+			VALUES(accs_seq.nextval, #{accs_type}, #{accs_content}, #{accs_price}, #{accs_quantity}, sysdate, null, #{accs_sum}, #{accs_state}, #{emp_code}, null, null, #{pro_code}, #{com_code})
+   </insert>
+   
+   
+   <!-- 최유성 - 리절트맵 -->
+	<resultMap id="pdStockOrder" type="com.project.UsERP.vo.LogisticsStatementVO">
+		<id       property="logs_code"   column="logs_code"/>
+		<result   property="logs_type"      column="logs_type"/>
+		<result   property="logs_reg_date"         column="logs_reg_date"/>
+		<result   property="logs_update_date"      column="logs_update_date"/>
+		<result   property="logs_state"      column="logs_state"/>
+		<result   property="logs_quantity"      column="logs_quantity"/>
+		<result   property="logs_shortage"      column="logs_shortage"/>
+		<result   property="com_code"      column="com_code"/>
+		<result   property="sto_code"   column="sto_code"/>
+		<result   property="pro_code"   column="pro_code"/>
+		<result   property="emp_code"   column="emp_code"/>
+		
+		<association property="company" javaType="com.project.UsERP.vo.CompanyVO">
+		   <id       property="com_code"   column="com_code"/>
+		   <result   property="com_name"   column="com_name"/>
+		</association>
+		<association property="product" javaType="com.project.UsERP.vo.ProductVO">
+		   <id       property="pro_code"   column="pro_code"/>
+		   <result   property="pro_name"  column="pro_name"/>
+		</association>
+		<association property="employee" javaType="com.project.UsERP.vo.EmployeeVO">
+		   <id       property="emp_code"   column="emp_code"/>
+		   <result   property="emp_name"  column="emp_name"/>
+		</association>
+		<association property="warehouse" javaType="com.project.UsERP.vo.WarehouseVO">
+		   <id       property="ware_code"   column="ware_code"/>
+		   <result   property="ware_name"   column="ware_name"/>
+		   <result   property="ware_location"   column="ware_location"/>
+		   <result   property="ware_state"   column="ware_state"/>
+		</association>
+		<association property="stock" javaType="com.project.UsERP.vo.StockVO">
+		   <id       property="sto_code"   column="sto_code"/>
+		   <result   property="sto_quantity"  column="sto_quantity"/>
+		   <result   property="sto_type"  column="sto_type"/>
+		   <result   property="sto_amount"  column="sto_amount"/>
+		   <result   property="sto_state"  column="sto_state"/>
+		   <result   property="sto_reg_date"  column="sto_reg_date"/>
+		   <result   property="sto_content"  column="sto_content"/>
+		   <result   property="sto_startwh"  column="sto_startwh"/>
+		   <result   property="sto_arrivewh"  column="sto_arrivewh"/>
+		   <result   property="ware_code"  column="ware_code"/>
+		   <result   property="pro_code"  column="pro_code"/>
+		</association>
+    </resultMap>
+
+	<!-- 최유성 - 회계전표관련 리절트 맵 -->
+	<resultMap id="AccountStatementMap" type="com.project.UsERP.vo.AccountStatementVO">
+      <id      property="accs_code"   column="accs_code"/>
+      <result   property="accs_type"   column="accs_type"/>
+      <result   property="accs_content"   column="accs_content"/>
+      <result   property="accs_price"   column="accs_price"/>
+      <result   property="accs_quantity" column="accs_quantity"/>
+      <result   property="accs_reg_date" column="accs_reg_date"/>
+      <result   property="accs_update_date"   column="accs_update_date"/>
+      <result   property="accs_content"   column="accs_content"/>
+      <result   property="accs_state"   column="accs_state"/>
+      <result   property="accs_sum"      column="accs_sum"/>
+      <result   property="emp_code"      column="emp_code"/>
+      <result   property="pro_code"      column="pro_code"/>
+      <result   property="com_code"      column="com_code"/>
+      <association property="employee" javaType="com.project.UsERP.vo.EmployeeVO">
+         <id      property="emp_code"   column="emp_code"/>
+         <result   property="emp_name"   column="emp_name"/>
+      </association>
+      <association property="product" javaType="com.project.UsERP.vo.ProductVO">
+         <id      property="pro_code"   column="pro_code"/>
+         <result   property="pro_name"   column="pro_name"/>
+         <result   property="pro_sal_price" column="pro_sal_price"/>
+      </association>
+      <association property="company" javaType="com.project.UsERP.vo.CompanyVO">
+         <id      property="com_code"   column="com_code"/>
+         <result   property="com_name"   column="com_name"/>
+      </association>
+   </resultMap>
+   
+	<!-- 최유성 - 기초등록 - 구매 거래처 목록 상세페이지 -->
+	<select id = "pdcompanyDetail" resultType = "com.project.UsERP.vo.CompanyVO">
+		SELECT * FROM company WHERE com_type = 200 AND com_code=#{com_code}
+	</select>
+	
+	<!-- 최유성 - 기초등록 - 상품 상세페이지 -->
+	<select id = "pdproductDetail" resultType = "com.project.UsERP.vo.ProductVO">
+		SELECT * FROM product WHERE pro_code=#{pro_code}
+	</select>
+
+	<!-- 최유성 - 기초 등록 구매 거래처 목록 -->
+	<select id = "pdCompanySelect" resultType = "com.project.UsERP.vo.CompanyVO">
+		select * from company where com_type = 200
+	</select>
+	
+	<!-- 최유성 - 기초 등록 상품 목록 -->
+	<select id = "pdProductSelect" resultType = "com.project.UsERP.vo.ProductVO">
+		select * from product
+	</select>
+
+	<!-- 최유성 - 입고내역 -->
+	<select id = "pdStockInOrder" resultMap="pdStockOrder">
+		SELECT * 
+		  FROM logistics_statement l
+		  JOIN warehouse w
+    		ON w.ware_code = l.ware_code
+    	  JOIN company c
+		    ON c.com_code = l.com_code
+		  JOIN product p
+		    ON p.pro_code = l.pro_code
+		  JOIN employee e
+		    ON e.emp_code = l.emp_code     
+		 WHERE logs_type = 5
+		 order by logs_code DESC
+	</select>
+	
+	<!-- 구매,승인내역 -->
+   <select id = "salesList" resultType = "com.project.UsERP.vo.AccountStatementVO">
+      	select * from account_statement ORDER BY accs_code desc
+   </select>
+   
+   <!-- 최유성 - 구매 회계전표 승인내역 -->
+   <select id = "AccountStatement" resultMap = "AccountStatementMap">
+		SELECT a.accs_code, c.com_name, p.pro_name, a.accs_price, p.pro_pur_price, a.accs_quantity, a.accs_sum, e.emp_name, a.accs_content, a.accs_reg_date,a.accs_type
+       	  FROM account_statement a, company c, product p, employee e
+      	 WHERE a.emp_code = e.emp_code
+           AND a.com_code = c.com_code
+           AND a.pro_code = p.pro_code
+           AND a.accs_state=1
+           AND a.accs_type = 3
+         ORDER BY accs_code DESC
+	</select>
+	
+	<!-- 최유성 - 회계전표 승인내역 -->
+	<select id = "getEmpName" resultType="String">
+		select emp_name from employee where  emp_code=#{emp_code}
+	</select>
+	
+	<!-- 최유성 - 회계전표 클릭시 입고물류전표 등록창 띄우기 -->
+	<select id = "getAccountStatement" resultMap = "AccountStatementMap">
+		SELECT a.accs_code, c.com_name, p.pro_name, a.accs_quantity, e.emp_name, c.com_code, p.pro_code, e.emp_name
+		  FROM account_statement a, company c, product p, employee e
+		 WHERE a.emp_code = e.emp_code
+		   AND a.com_code = c.com_code
+		   AND a.pro_code = p.pro_code
+		   AND a.accs_code = #{accs_code}
+		 ORDER BY accs_code DESC
+	</select>
+	
+	<!-- 최유성 - 재고코드 가져오기 -->
+	<select id = "getStock" resultType = "Object" parameterType="java.util.Map">
+        SELECT s.sto_code
+  		  FROM stock s
+  		  JOIN warehouse w
+    		ON w.ware_code = s.ware_code
+    	  join account_statement a
+            on s.pro_code = a.pro_code	
+ 		 where s.pro_code = #{pro_code} and s.ware_code=#{ware_code} and a.accs_code = #{accs_code}
+   </select>
+
+	<!-- 최유성 - 입고 전표 등록 -->
+	<insert id="logsPdInsert" parameterType = "com.project.UsERP.vo.LogisticsStatementVO">
+		INSERT INTO logistics_statement(
+			logs_code,logs_type,logs_reg_date,logs_update_date,logs_state,logs_quantity,
+			logs_shortage,com_code,sto_code,pro_code,emp_code,ware_code)
+		VALUES(logs_seq.nextval,#{logs_type},sysdate,null,#{logs_state},#{logs_quantity},
+				#{logs_shortage},#{com_code},decode(#{sto_code},0,null,#{sto_code},#{sto_code}),#{pro_code},#{emp_code},#{ware_code})
+	</insert>
+	
+	<!-- 최유성 입고 전표 등록시 회계전표 상태코드 변화 -->
+	<update id="updatestatement" parameterType="com.project.UsERP.vo.AccountStatementVO">
+		UPDATE account_statement SET accs_state=#{accs_state} WHERE accs_code = #{accs_code}
+	</update>
+	
+	<select id = "getWareCode" resultType="int" parameterType="int">
+		SELECT ware_code FROM warehouse where ware_type= #{ware_type}
+	</select>
+   
+   <!-- 부족 수량 내역 조회 -->
+   <select id = "logsshortage" resultMap = "LogsMap">
+         SELECT l.*, p.pro_pur_price, c.com_name, p.pro_name
+		    FROM logistics_statement l, product p, company c
+		    WHERE l.pro_code = p.pro_code
+		    AND l.com_code = c.com_code
+		    AND l.logs_state = 4
+		    ORDER BY logs_code DESC
+   </select>
+   <!-- 이재홍 - 구매 현황 - 구매 전표 상세 페이지 -->
+   <select id="logsshortageDetail" resultMap="LogsMap">
+      SELECT l.*, p.pro_pur_price, c.com_name, p.pro_name, p.pro_code
+		    FROM logistics_statement l, product p, company c
+		    WHERE l.pro_code = p.pro_code
+		    AND l.com_code = c.com_code
+		    AND l.logs_code=#{logs_code}
+   </select>
+</mapper>

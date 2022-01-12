@@ -1,0 +1,31 @@
+@charset "UTF-8";
+
+.asss {
+	font-size:25px; /* 대메뉴 */	
+}
+.ass2 {
+	font-size:20px; /* 중메뉴 */
+}
+.font16 {
+	font-size:16px;
+}
+
+.th20 th {
+	width:20%
+}
+.tap {
+	background-color:rgba(0,10,123,0.91); /* 탭배경화면 */
+}
+.tablein {
+	background-color:#EAEAEA;
+}
+.center {
+	text-align: center;
+}
+.con {
+	background-color:rgba(0,10,123,0.8);
+}
+
+.con2 {
+	font-size:22px; /* 중메뉴 */
+}

@@ -1,0 +1,300 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.project.UsERP.persistence.HrDAO">
+
+	<resultMap id="hrCodeMap" type="com.project.UsERP.vo.HrCodeVO">
+		<id     property="hr_code"   column="hr_code" />  
+		<result property="hr_code_name" column="hr_code_name" />
+		<result property="hr_state"  column="hr_state" />
+		<result property="hcg_code"  column="hcg_code" />
+		<association property="hrCodeGroup" javaType="com.project.UsERP.vo.HrCodeGroupVO">
+			<id		property="hcg_code"		column="hcg_code" />  
+			<result property="hcg_name"		column="hcg_name" />
+			<result property="hcg_state"	column="hcg_state" />
+		</association> 
+	</resultMap>
+
+	<resultMap id="hrCodePosMap" type="com.project.UsERP.vo.HrCodeVO">
+		<id     property="hr_code"		column="hr_code" />  
+		<result property="hr_code_name" column="hr_code_name" />
+		<result property="hr_state"		column="hr_state" />
+		<result property="hcg_code"		column="hcg_code" />
+		<association property="hrCodeGroup" javaType="com.project.UsERP.vo.HrCodeGroupVO">
+			<id      property="hcg_code" column="hcg_code" />  
+			<result property="hcg_name"  column="hcg_name" />
+			<result property="hcg_state" column="hcg_state" />
+		</association> 
+	</resultMap>
+	
+	<resultMap id="hrCardMap" type="com.project.UsERP.vo.EmployeeVO">
+		<id     property="emp_code"   column="emp_code" />  
+		<result property="emp_pwd" column="emp_pwd" />
+		<result property="emp_authority"  column="emp_authority" />
+		<result property="emp_enabled"  column="emp_enabled" />
+		<result property="emp_name"  column="emp_name" />
+		<result property="emp_hire_date"  column="emp_hire_date" />
+		<result property="emp_cos"  column="emp_cos" />
+		<result property="emp_photo"  column="emp_photo" />
+		<result property="emp_jumin"  column="emp_jumin" />
+		<result property="emp_address"  column="emp_address" />
+		<result property="emp_tel"  column="emp_tel" />
+		<result property="emp_phone"  column="emp_phone" />
+		<result property="emp_email"  column="emp_email" />
+		<result property="emp_port_no"  column="emp_port_no" />
+		<result property="emp_bank"  column="emp_bank" />
+		<result property="emp_account"  column="emp_account" />
+		<result property="dep_code"  column="dep_code" />
+		<result property="hr_code"  column="hr_code" />
+		<association property="department" javaType="com.project.UsERP.vo.DepartmentVO">
+			<id      property="dep_code"   column="dep_code" />  
+			<result property="dep_name" column="dep_name" />
+			<result property="dep_state"  column="dep_state" />
+		</association> 
+		<association property="hrCode" javaType="com.project.UsERP.vo.HrCodeVO">
+			<id      property="hr_code"   column="hr_code" />  
+			<result property="hr_code_name" column="hr_code_name" />
+			<result property="hr_state"  column="hr_state" />
+			<result property="hcg_code"  column="hcg_code" />
+		</association> 
+	</resultMap>
+	
+	<resultMap id="appointHistoryMap" type="com.project.UsERP.vo.AppointHistoryVO">
+		<id     property="ap_code"		column="ap_code"/>  
+		<result property="ap_date"		column="ap_date"/>
+		<result property="ap_cur_dep"	column="ap_cur_dep"/>
+		<result property="ap_cur_position" column="ap_cur_position"/>
+		<result property="ap_pre_dep"	column="ap_pre_dep"/>
+		<result property="ap_pre_position" column="ap_pre_position"/>
+		<result property="emp_code"		column="emp_code"/>
+		<association property="employee" javaType="com.project.UsERP.vo.EmployeeVO">
+			<id		property="emp_code" column="emp_code"/>  
+			<result property="emp_name" column="emp_name"/>
+		</association>
+	</resultMap>
+	
+	<resultMap id="salaryStatementMap" type="com.project.UsERP.vo.SalaryStatementVO">
+		<id     property="ss_code"			column="ss_code"/>
+		<result property="ss_total_sal"		column="ss_total_sal"/>
+		<result property="ss_reg_date"		column="ss_reg_date"/>
+		<result property="ss_sal_date"		column="ss_sal_date"/>
+		<result property="ss_state"			column="ss_state"/>
+		<association property="salary" javaType="com.project.UsERP.vo.SalaryVO">
+			<id		property="sal_code"		column="sal_code"/>  
+			<result property="sal_basic"	column="sal_basic"/>
+			<result property="sal_over"		column="sal_over"/>
+			<result property="sal_bonus"	column="sal_bonus"/>
+			<result property="sal_meal"		column="sal_meal"/>
+			<result property="sal_vehicle"	column="sal_vehicle"/>
+			<result property="sal_worktax"	column="sal_worktax"/>
+			<result property="sal_resident"	column="sal_resident"/>
+			<result property="sal_hire"		column="sal_hire"/>
+			<result property="sal_pension"	column="sal_pension"/>
+			<result property="sal_health"	column="sal_health"/>
+		</association>
+		<association property="employee" javaType="com.project.UsERP.vo.EmployeeVO">
+			<id		property="emp_code"		column="emp_code"/>  
+			<result property="emp_name"		column="emp_name"/>
+			<result property="hr_code"		column="hr_code"/>
+			<result property="dep_code"		column="dep_code"/>
+		</association>
+		<association property="hrCode" javaType="com.project.UsERP.vo.HrCodeVO">
+			<id		property="hr_code"		column="hr_code"/>  
+			<result property="hr_code_name"	column="hr_code_name"/>
+		</association>
+		<association property="department" javaType="com.project.UsERP.vo.DepartmentVO">
+			<id		property="dep_code"		column="dep_code"/>  
+			<result property="dep_name"		column="dep_name"/>
+		</association>
+	</resultMap>
+	
+	<!-- 김은희 - 인사 코드 그룹 조회 -->
+	<select id="hrCgList" resultType="com.project.UsERP.vo.HrCodeGroupVO">
+		SELECT * FROM hr_code_group ORDER BY hcg_code
+	</select>
+	
+	<!-- 김은희 - 인사 코드 조회 -->
+	<select id="hrCList" resultMap="hrCodeMap">
+		SELECT * FROM hr_code ORDER BY hr_code
+	</select>
+	
+	<!-- 조명재 - 인사 코드 조회 - 직급 -->
+	<select id="hrCodePosList" resultType="com.project.UsERP.vo.HrCodeVO">
+		SELECT * FROM hr_code WHERE hcg_code = 1 ORDER BY hr_code
+	</select>
+	
+	<!-- 김은희 - 인사 코드 등록 -->
+    <insert id="hrCodeInsert" parameterType="com.project.UsERP.vo.HrCodeVO">
+      INSERT INTO hr_code(hr_code, hr_code_name,hr_state, hcg_code)
+		VALUES (#{hr_code},#{hr_code_name}, #{hr_state}, #{hcg_code})
+    </insert>
+		
+	<!-- 김은희 - 인사 코드 중복확인  -->
+ 	<select id="hrCodeCheck" parameterType="int" resultType="int">
+ 		SELECT COUNT(*) FROM hr_code WHERE hr_code=#{hr_code}
+ 	</select>
+ 	
+ 	<!-- 김은희 - 인사 코드명 중복확인  -->
+ 	<select id="hrConfirmHrName" resultType="int">
+ 		SELECT COUNT(*) FROM hr_code WHERE hr_code_name=#{hr_code_name}
+ 	</select>
+	
+	<!-- 조명재 - 부서 조회 -->
+	<select id="depList" resultType="com.project.UsERP.vo.DepartmentVO">
+		SELECT * FROM department ORDER BY dep_code 
+	</select>
+	
+	<!-- 조명재 - 인사 발령 목록 갯수 -->
+	<select id="getAppointmentCnt" resultType="int">
+		SELECT COUNT(*) FROM appoint_history
+	</select>
+	
+	<!-- 조명재 - 인사 발령(중메뉴) - 인사 발령 조회 -->
+	<select id="appointmentList" parameterType="java.util.Map" resultMap="appointHistoryMap">
+		<![CDATA[
+			SELECT * 
+			FROM(SELECT ap_code, ap_date, ap_cur_dep, ap_cur_position, ap_pre_dep, ap_pre_position, emp_code, emp_name, rownum rNum 
+				FROM(SELECT a.*, e.emp_name 
+						FROM appoint_history a, employee e 
+						WHERE a.emp_code = e.emp_code 
+						ORDER BY ap_date DESC
+					)
+				)
+			WHERE rNum >= #{start} 
+			AND rNum <= #{end}
+		]]>
+	</select>
+	
+	<!-- 조명재 - 인사 발령(중메뉴) - 사원번호 확인 -->
+	<select id="hrConfirmAppoint" resultType="com.project.UsERP.vo.EmployeeVO">
+		SELECT * FROM employee WHERE emp_code = #{emp_code}
+	</select>
+	
+	<!-- 조명재 - 인사 발령(중메뉴) - 현재 부서를 반환한다 -->
+	<select id="getDepName" resultType="String">
+		SELECT dep_name FROM department WHERE dep_code = #{dep_code}
+	</select>
+	
+	<!-- 조명재 - 인사 발령(중메뉴) - 현재 직급을 반환한다 -->
+	<select id="getCodeName" resultType="String">
+		SELECT hr_code_name FROM hr_code WHERE hr_code = #{hr_code}
+	</select>
+	
+	<!-- 조명재 - 인사 발령(중메뉴) - 인사 발령 -->
+	<insert id="hrAppointmentPro" parameterType="com.project.UsERP.vo.AppointHistoryVO">
+		INSERT INTO appoint_history(ap_code, ap_date, ap_cur_dep, ap_cur_position, 
+			ap_pre_dep, ap_pre_position, emp_code)
+		VALUES (ap_seq.nextval, DEFAULT, #{ap_cur_dep}, #{ap_cur_position}, #{ap_pre_dep}, #{ap_pre_position}, #{emp_code})
+	</insert>
+	
+	<!-- 김은희 - 인사카드 조회 -->
+	<select id="hrCardList" resultMap="hrCardMap">
+		SELECT e.emp_photo, e.emp_code, d.dep_name, c.hr_code_name, e.emp_name, e.emp_hire_date
+		  FROM employee e, department d, hr_code c
+		 WHERE e.dep_code = d.dep_code
+		 AND e.hr_code = c.hr_code 
+		 ORDER BY emp_code
+	</select>
+	
+	<!-- 김은희 - 인사 코드 그룹 조회 상세페이지 -->
+	<select id="hrRegDetail" resultMap="hrCodeMap">
+		SELECT g.hcg_code, h.hr_code, h.hr_code_name, h.hr_state, g.hcg_name
+		  FROM hr_code h , hr_code_group g
+		 WHERE h.hcg_code = g.hcg_code
+		   AND g.hcg_code = #{hcg_code}
+		   ORDER BY hr_code
+	</select>
+	
+	<!-- 김은희 - 인사카드 상세페이지 조회 -->
+	<select id="hrCardDetail" resultMap="hrCardMap" parameterType="String">
+		SELECT e.emp_photo, e.emp_code, e.emp_name, d.dep_name, c.hr_code_name, e.emp_hire_date, e.emp_cos, e.emp_jumin, e.emp_address,
+				e.emp_tel, e.emp_phone, e.emp_email, e.emp_bank, e.emp_account 
+		  FROM employee e, department d, hr_code c 
+		 WHERE e.dep_code = d.dep_code 
+		   AND e.hr_code = c.hr_code 
+		   AND emp_code = #{emp_code}
+	</select>
+	
+	<!-- 조명재 - 인사카드 등록 부서 목록 조회 -->
+	<select id="notdepList" resultType="com.project.UsERP.vo.DepartmentVO">
+		SELECT * 
+			FROM department 
+			WHERE dep_name NOT LIKE '%'||'휴직'||'%'
+			AND dep_name NOT LIKE '%'||'퇴직'||'%'
+			ORDER BY dep_code 
+	</select>
+	
+	<!-- 김은희 - 인사카드 등록 -->
+   <insert id="hrCardInsert" parameterType="java.util.Map">
+      INSERT INTO employee(emp_photo, emp_code, emp_name, dep_code, hr_code, emp_hire_date, emp_cos
+            , emp_jumin, emp_address, emp_tel, emp_phone, emp_email, emp_port_no, emp_account, emp_bank, emp_authority)
+      VALUES (#{vo.emp_photo}, #{vo.emp_code}, #{vo.emp_name}, #{vo.dep_code}, #{vo.hr_code}, TO_DATE(#{emp_hire_date},'YY-MM-DD'), #{vo.emp_cos}, #{vo.emp_jumin}, #{vo.emp_address}, #{vo.emp_tel}, #{vo.emp_phone}, #{vo.emp_email}, #{vo.emp_port_no}, #{vo.emp_account}, #{vo.emp_bank}, #{vo.emp_authority})
+   </insert>
+		
+	<!-- 김은희 - 인사 카드 사번 중복확인  -->
+ 	<select id="codeCheck" parameterType="String" resultType="int">
+ 		SELECT COUNT(*) FROM employee WHERE emp_code=#{emp_code}
+ 	</select>
+ 	
+	<!-- 조명재 - 휴직자 조회 -->
+	<select id="hrLeaveList" resultMap="appointHistoryMap">
+		SELECT a.*, d.dep_name, e.emp_name FROM appoint_history a, department d, employee e
+			WHERE a.emp_code = e.emp_code
+			AND e. dep_code = d.dep_code
+			AND a.ap_cur_dep='휴직'
+			ORDER BY a.ap_date DESC
+	</select>
+	
+	<!-- 조명재 - 퇴직자 조회 -->
+	<select id="hrRetireList" resultMap="appointHistoryMap">
+		SELECT a.*, d.dep_name, e.emp_name FROM appoint_history a, department d, employee e
+			WHERE a.emp_code = e.emp_code
+			AND e. dep_code = d.dep_code
+			AND a.ap_cur_dep='퇴직'
+			ORDER BY a.ap_date DESC
+	</select>
+	
+	<!-- 조명재 - 급여 내역 -->
+	<select id="hrSalaryList" resultMap="salaryStatementMap">
+		SELECT * 
+		  FROM salary_statement ss, salary s, employee e, hr_code h, department d
+		 WHERE ss.sal_code = s.sal_code
+		   AND ss.emp_code = e.emp_code
+		   AND e.hr_code = h.hr_code
+		   AND e.dep_code = d.dep_code
+		 ORDER BY ss_code DESC
+	</select>
+	
+	<!-- 조명재 - 야근 유무를 확인한다 -->
+	<select id="getOverCnt" parameterType="java.util.Map" resultType="int">
+		SELECT COUNT(*) 
+		  FROM commute 
+		 WHERE emp_code = #{emp_code} 
+		   AND TO_CHAR(cm_date, 'YYYY-MM') = #{pay_month}
+		   AND cm_night_time > 0
+	</select>
+	
+	<!-- 조명재 - 야근 시간을 반환한다 -->
+	<select id="getOverTimes" parameterType="java.util.Map" resultType="int">
+		SELECT SUM(cm_night_time) 
+		  FROM commute 
+		 WHERE TO_CHAR(cm_date, 'YYYY-MM') = #{pay_month}
+		   AND emp_code = #{emp_code}
+	</select>
+	
+	<!-- 조명재 - 급여 세부사항 등록 -->
+	<insert id="salaryDetailIns" parameterType="java.util.Map">
+		INSERT INTO salary(sal_code, sal_basic, sal_over, sal_bonus, sal_meal, sal_vehicle, sal_worktax, sal_resident, sal_hire, sal_pension, sal_health) 
+		VALUES (sal_seq.nextval, #{sal_basic}, #{sal_over}, #{sal_bonus}, #{sal_meal}, #{sal_vehicle}, #{sal_worktax}, #{sal_resident}, #{sal_hire}, #{sal_pension}, #{sal_health})
+	</insert>
+	
+	<!-- 조명재 - 급여 전표 등록 -->
+	<insert id="salaryStatement" parameterType="java.util.Map">
+		INSERT INTO salary_statement(ss_code, ss_total_sal, ss_reg_date, ss_sal_date, ss_state, sal_code, hr_code, emp_code, dep_code) 
+		VALUES (ss_seq.nextval, #{ss_total_sal}, DEFAULT, NULL, DEFAULT, sal_seq.currval, #{hr_code}, #{emp_code}, #{dep_code})
+	</insert>
+
+</mapper>

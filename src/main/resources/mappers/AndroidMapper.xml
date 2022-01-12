@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.UsERP.persistence.AndroidDAO">
+   
+   <!-- 김민수 - 재고수불부VO resultMap -->
+   <resultMap id="supplyVOMap" type="com.project.UsERP.vo.StockSupplyVO" >
+      <id property="stsu_code" column="stsu_code" />
+      <result property="stsu_reg_date" column="stsu_reg_date" />
+      <result property="stsu_type" column="stsu_type" />
+      <result property="stsu_quantity" column="stsu_quantity" />
+      <result property="stsu_content" column="stsu_content" />
+      <result property="stsu_amount" column="stsu_amount" />
+      <result property="stsu_startwh" column="stsu_startwh" />
+      <result property="stsu_arrivewh" column="stsu_arrivewh" />
+      <result property="sto_code" column="sto_code" />
+      <result property="pro_code" column="pro_code" />
+      <result property="emp_code" column="emp_code" />
+      <association property="stock" javaType="com.project.UsERP.vo.StockVO">
+         <id property="sto_code" column="sto_code" />
+         <result property="sto_quantity" column="sto_quantity" />
+         <result property="sto_reg_date" column="sto_reg_date" />
+      </association>
+      <association property="product" javaType="com.project.UsERP.vo.ProductVO">
+         <id property="pro_code" column="pro_code" />
+         <result property="pro_name" column="pro_name" />
+         <result property="pro_pur_price" column="pro_pur_price" />
+         <result property="pro_sal_price" column="pro_sal_price" />
+         <result property="pro_state" column="pro_state" />
+         <result property="pro_reg_date" column="pro_reg_date" />
+      </association>
+   </resultMap>
+   
+   <!-- 최유성 재고VO resultMap -->
+   <resultMap id="StockMap" type="com.project.UsERP.vo.StockVO">
+      <id property="sto_code" column="sto_code" />
+      <result property="sto_quantity" column="sto_quantity" />
+      <result property="sto_reg_date" column="sto_reg_date" />
+      <result property="ware_code" column="ware_code" />
+      <result property="pro_code" column="pro_code" />
+      <association property="warehouse" javaType="com.project.UsERP.vo.WarehouseVO">
+         <id property="ware_code" column="ware_code" />
+         <result property="ware_name" column="ware_name" />
+         <result property="ware_state" column="ware_state" />
+      </association>
+      <association property="product" javaType="com.project.UsERP.vo.ProductVO">
+         <id property="pro_code" column="pro_code" />
+         <result property="pro_name" column="pro_name" />
+         <result property="pro_state" column="pro_state" />
+      </association>
+   </resultMap>
+   
+   <!-- 김은희 - 사원VO 리절트맵 -->
+   <resultMap id="hrCardMap" type="com.project.UsERP.vo.EmployeeVO">
+      <id     property="emp_code"   column="emp_code" />  
+      <result property="emp_pwd" column="emp_pwd" />
+      <result property="emp_authority"  column="emp_authority" />
+      <result property="emp_enabled"  column="emp_enabled" />
+      <result property="emp_name"  column="emp_name" />
+      <result property="emp_hire_date"  column="emp_hire_date" />
+      <result property="emp_cos"  column="emp_cos" />
+      <result property="emp_photo"  column="emp_photo" />
+      <result property="emp_jumin"  column="emp_jumin" />
+      <result property="emp_address"  column="emp_address" />
+      <result property="emp_tel"  column="emp_tel" />
+      <result property="emp_phone"  column="emp_phone" />
+      <result property="emp_email"  column="emp_email" />
+      <result property="emp_port_no"  column="emp_port_no" />
+      <result property="emp_bank"  column="emp_bank" />
+      <result property="emp_account"  column="emp_account" />
+      <result property="hr_code"  column="hr_code" />
+      <result property="dep_code"  column="dep_code" />
+      <association property="department" javaType="com.project.UsERP.vo.DepartmentVO">
+         <id      property="dep_code"   column="dep_code" />  
+         <result property="dep_name" column="dep_name" />
+         <result property="dep_state"  column="dep_state" />
+      </association> 
+      <association property="hrCode" javaType="com.project.UsERP.vo.HrCodeVO">
+         <id      property="hr_code"   column="hr_code" />  
+         <result property="hr_code_name" column="hr_code_name" />
+         <result property="hr_state"  column="hr_state" />
+         <result property="hcg_code"  column="hcg_code" />
+      </association> 
+   </resultMap>
+
+
+   
+   <!-- 조명재  - 급여VO 리절트맵 -->
+   <resultMap id="salaryStatementMap" type="com.project.UsERP.vo.SalaryStatementVO">
+      <id     property="ss_code"         column="ss_code"/>
+      <result property="ss_total_sal"      column="ss_total_sal"/>
+      <result property="ss_reg_date"      column="ss_reg_date"/>
+      <result property="ss_sal_date"      column="ss_sal_date"/>
+      <result property="ss_state"         column="ss_state"/>
+      <association property="salary" javaType="com.project.UsERP.vo.SalaryVO">
+         <id      property="sal_code"      column="sal_code"/>  
+         <result property="sal_basic"   column="sal_basic"/>
+         <result property="sal_night"   column="sal_night"/>
+         <result property="sal_over"      column="sal_over"/>
+         <result property="sal_cos"      column="sal_cos"/>
+         <result property="sal_or"      column="sal_or"/>
+      </association>
+      <association property="employee" javaType="com.project.UsERP.vo.EmployeeVO">
+         <id      property="emp_code"      column="emp_code"/>  
+         <result property="emp_name"      column="emp_name"/>
+         <result property="hr_code"      column="hr_code"/>
+         <result property="dep_code"      column="dep_code"/>
+      </association>
+      <association property="hrCode" javaType="com.project.UsERP.vo.HrCodeVO">
+         <id      property="hr_code"      column="hr_code"/>  
+         <result property="hr_code_name"   column="hr_code_name"/>
+      </association>
+      <association property="department" javaType="com.project.UsERP.vo.DepartmentVO">
+         <id      property="dep_code"      column="dep_code"/>  
+         <result property="dep_name"      column="dep_name"/>
+      </association>
+   </resultMap>
+   
+   <!-- 조명재 - 사원정보를 반환한다 -->
+   <select id="getEmpInfo" resultType="com.project.UsERP.vo.EmployeeVO">
+      SELECT * FROM employee WHERE emp_code = #{emp_code}
+   </select>
+   
+   <!-- 김민수 - 재고수불부를 반환한다. -->
+   <select id="getSupplyList" resultMap="supplyVOMap">
+   SELECT TO_CHAR(ss.stsu_reg_date,'yyyy-MM-dd') as stsu_content, ss.stsu_type, ss.stsu_amount, ss.stsu_quantity, p.pro_code, p.pro_name
+   FROM stock_supply ss, product p
+   WHERE ss.pro_code = p.pro_code 
+   ORDER BY ss.stsu_reg_date
+   </select>
+   
+    <!-- 최유성 - 재고현황정보를 반환한다 -->
+   <select id="getStoInfo" resultMap="StockMap">
+       SELECT pro_name,ware_name,sto_quantity
+        FROM (SELECT sto_quantity,ware_name,pro_name
+               FROM(SELECT sto_quantity,ware_name,pro_name
+                     FROM stock s, warehouse w, product p
+                    WHERE s.ware_code = w.ware_code
+                      AND s.pro_code = p.pro_code
+                      AND w.ware_state = 1
+                      AND p.pro_state = 1
+                    ORDER BY s.pro_code, s.ware_code
+                    )
+            )
+   </select>
+   
+   <!-- 김은희 - 인사카드조회 -->
+   <select id="getEmployeeInfo" resultMap="hrCardMap">
+       SELECT e.emp_code, d.dep_name, c.hr_code_name, e.emp_name, TO_CHAR(e.emp_hire_date, 'yyyy-mm-dd') as emp_address 
+         FROM employee e, department d, hr_code c
+        WHERE e.dep_code = d.dep_code
+          AND e.hr_code = c.hr_code 
+        ORDER BY emp_code
+   </select>
+   
+   <!-- 조명재 - 급여내역조회 -->
+   <select id="getSalInfo" resultMap="salaryStatementMap">
+      SELECT dep_name, hr_code_name, emp_name, ss_total_sal, ss_state
+        FROM salary_statement ss, salary s, employee e, hr_code h, department d
+       WHERE ss.sal_code = s.sal_code
+         AND ss.emp_code = e.emp_code
+         AND e.hr_code = h.hr_code
+         AND e.dep_code = d.dep_code
+       ORDER BY ss_code DESC         
+   </select>
+   
+   <!-- 강재현 - 회계보고서 - 재무상태표 상품 -->
+   <select id="get1" resultType="int">
+      SELECT sum(accs_sum) ss1
+      FROM account_statement
+      WHERE accs_type=1
+   </select>
+   
+   <!-- 강재현 - 회계보고서 - 재무상태표 외상매출금 -->
+   <select id="get2" resultType="int">
+      SELECT sum(accs_sum) ss2
+      FROM account_statement
+      WHERE accs_type=2
+   </select>
+   
+   <!-- 강재현 - 회계보고서 - 재무상태표  -->
+   <select id="get3" resultType="int">
+      SELECT sum(accs_sum) ss3
+      FROM account_statement
+      WHERE accs_type=3
+   </select>
+   
+   <!-- 강재현 - 회계보고서 - 재무상태표 외상매입금 -->
+   <select id="get4" resultType="int">
+      SELECT sum(accs_sum) ss4
+      FROM account_statement
+      WHERE accs_type = 4
+   </select>
+   
+   <!-- 이재홍 - 회계보고서 - 손익계산서 매출액 -->
+   <select id="sum" resultType="int">
+      SELECT sum(accs_sum) sum
+         FROM account_statement
+         WHERE accs_type = 2
+           OR accs_type = 1
+           OR accs_state = 1
+   </select>
+   
+   <!-- 이재홍 - 회계보고서 - 손익계산서 매출원가 -->
+   <select id="sum1" resultType="int">
+      SELECT sum(p.pro_sal_price * a.accs_quantity) sum1
+          FROM account_statement a, product p
+          WHERE a.pro_code = p.pro_code
+          AND a.accs_state = 1
+   </select>
+   
+   <!-- 이재홍 - 회계보고서 - 손익계산서 판매비와 관리비 -->
+   <select id="sum2" resultType="int">
+      SELECT sum(ss_total_sal) sum2
+      FROM salary_statement
+      WHERE ss_state = 1
+   </select>
+   
+   
+</mapper>

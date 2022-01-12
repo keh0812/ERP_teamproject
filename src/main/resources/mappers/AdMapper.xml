@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.project.UsERP.persistence.AdDAO">
+
+	<resultMap id="AccsMap"
+      type="com.project.UsERP.vo.AccountStatementVO">
+      <id property="accs_code" column="accs_code" />
+      <result property="accs_type" column="accs_type" />
+      <result property="accs_content" column="accs_content" />
+      <result property="accs_price" column="accs_price" />
+      <result property="accs_quantity" column="accs_quantity" />
+      <result property="accs_reg_date" column="accs_reg_date" />
+      <result property="accs_rpm_date" column="accs_rpm_date" />
+      <result property="accs_update_date" column="accs_update_date" />
+      <result property="accs_sum" column="accs_sum" />
+      <result property="accs_state" column="accs_state" />
+      <result property="emp_code" column="emp_code" />
+      <result property="pro_code" column="pro_code" />
+      <result property="com_code" column="com_code" />
+      <association property="employee"
+         javaType="com.project.UsERP.vo.EmployeeVO">
+         <id property="emp_code" column="emp_code" />
+         <result property="emp_name" column="emp_name" />
+         <result property="dep_code" column="dep_code" />
+      
+      <association property="department"
+         javaType="com.project.UsERP.vo.DepartmentVO">
+         <id property="dep_code" column="dep_code" />
+         <result property="dep_name" column="dep_name" />
+      </association>
+      </association>
+      <association property="company"
+         javaType="com.project.UsERP.vo.CompanyVO">
+         <id property="com_code" column="com_code" />
+         <result property="com_name" column="com_name" />
+      </association>
+      <association property="product"
+         javaType="com.project.UsERP.vo.ProductVO">
+         <id property="pro_code" column="pro_code" />
+         <result property="pro_name" column="pro_name" />
+      </association>
+   </resultMap>
+
+	<resultMap id="salaryStatementMap" type="com.project.UsERP.vo.SalaryStatementVO">
+		<id     property="ss_code"			column="ss_code"/>
+		<result property="ss_total_sal"		column="ss_total_sal"/>
+		<result property="ss_reg_date"		column="ss_reg_date"/>
+		<result property="ss_sal_date"		column="ss_sal_date"/>
+		<result property="ss_state"			column="ss_state"/>
+		<association property="salary" javaType="com.project.UsERP.vo.SalaryVO">
+			<id		property="sal_code"		column="sal_code"/>  
+			<result property="sal_basic"	column="sal_basic"/>
+			<result property="sal_over"		column="sal_over"/>
+			<result property="sal_bonus"	column="sal_bonus"/>
+			<result property="sal_meal"		column="sal_meal"/>
+			<result property="sal_vehicle"	column="sal_vehicle"/>
+			<result property="sal_worktax"	column="sal_worktax"/>
+			<result property="sal_resident"	column="sal_resident"/>
+			<result property="sal_hire"		column="sal_hire"/>
+			<result property="sal_pension"	column="sal_pension"/>
+			<result property="sal_health"	column="sal_health"/>
+		</association>
+		<association property="employee" javaType="com.project.UsERP.vo.EmployeeVO">
+			<id		property="emp_code"		column="emp_code"/>  
+			<result property="emp_name"		column="emp_name"/>
+			<result property="hr_code"		column="hr_code"/>
+			<result property="dep_code"		column="dep_code"/>
+		</association>
+		<association property="hrCode" javaType="com.project.UsERP.vo.HrCodeVO">
+			<id		property="hr_code"		column="hr_code"/>  
+			<result property="hr_code_name"	column="hr_code_name"/>
+		</association>
+		<association property="department" javaType="com.project.UsERP.vo.DepartmentVO">
+			<id		property="dep_code"		column="dep_code"/>  
+			<result property="dep_name"		column="dep_name"/>
+		</association>
+	</resultMap>
+
+	<!-- 강재현 - 회계보고서 - 재무상태표 상품 -->
+	<select id="get1" resultType="int">
+		SELECT sum(accs_sum) ss1
+		FROM account_statement
+		WHERE accs_type=1
+	</select>
+	
+	<!-- 강재현 - 회계보고서 - 재무상태표 외상매출금 -->
+	<select id="get2" resultType="int">
+		SELECT sum(accs_sum) ss2
+		FROM account_statement
+		WHERE accs_type=2
+	</select>
+	
+	<!-- 강재현 - 회계보고서 - 재무상태표  -->
+	<select id="get3" resultType="int">
+		SELECT sum(accs_sum) ss3
+		FROM account_statement
+		WHERE accs_type=3
+	</select>
+	
+	<!-- 강재현 - 회계보고서 - 재무상태표 외상매입금 -->
+	<select id="get4" resultType="int">
+		SELECT sum(accs_sum) ss4
+		FROM account_statement
+		WHERE accs_type = 4
+	</select>
+	
+	<!-- 이재홍 - 회계보고서 - 손익계산서 매출액 -->
+	<select id="sum" resultType="int">
+		SELECT sum(accs_sum)
+			FROM account_statement
+			WHERE accs_type = 2
+	        OR accs_type = 1
+	        OR accs_state = 1
+	</select>
+	
+	<!-- 이재홍 - 회계보고서 - 손익계산서 매출원가 -->
+	<select id="sum1" resultType="int">
+		SELECT sum(p.pro_sal_price * a.accs_quantity) 
+		    FROM account_statement a, product p
+		    WHERE a.pro_code = p.pro_code
+		    AND a.accs_state = 1
+	</select>
+	
+	<!-- 이재홍 - 회계보고서 - 손익계산서 판매비와 관리비 -->
+	<select id="sum2" resultType="int">
+		SELECT sum(ss_total_sal)
+		FROM salary_statement
+		WHERE ss_state = 1
+	</select>
+
+	<!-- 이재홍 - 기초 등록 - 계좌 관리 - 계좌 리스트 -->
+	<select id="bankList" resultType="com.project.UsERP.vo.BankVO">
+		SELECT * FROM bank 
+		ORDER BY bank_code
+	</select>
+
+	<!-- 강재현 - 기초 등록 - 계정 관리 - 계정 리스트 -->
+	<select id="accountList"
+		resultType="com.project.UsERP.vo.AccountVO">
+		SELECT * FROM account ORDER BY acco_code 
+	</select>
+
+	<!-- 강재현 - 전표 관리 - 회계 전표 -->
+	<select id="statementList" resultMap="AccsMap">
+		SELECT e.emp_name, a.*
+			FROM employee e, account_statement a
+			WHERE a.emp_code = e.emp_code
+			ORDER BY accs_code DESC
+	</select>
+
+	<!-- 강재현 - 전표 관리 - 회계 전표 상세 페이지 -->
+	<select id="getStamentDetail" resultMap="AccsMap">
+		SELECT e.emp_name, a.*, p.pro_name, c.com_name, e.dep_code
+			FROM employee e, account_statement a, product p, company c
+			WHERE a.emp_code = e.emp_code
+			AND a.pro_code = p.pro_code
+			AND a.com_code = c.com_code
+			AND accs_code = #{accs_code}
+			ORDER BY accs_code DESC
+	</select>
+
+	<!-- 강재현 - 전표 관리 - 회계 전표 (승인 & 미승인) -->
+	<update id="acupdatestatment"
+		parameterType="com.project.UsERP.vo.AccountStatementVO">
+		UPDATE account_statement SET accs_state=#{accs_state}, accs_update_date=#{accs_update_date} 
+			WHERE accs_code = #{accs_code}
+	</update>
+
+	<!-- 강재현 - 전표 관리 - 급여 전표 -->
+	<select id="salarystatementList" resultMap="salaryStatementMap">
+		SELECT * 
+			FROM salary_statement ss, salary s, employee e, hr_code h, department d
+			WHERE ss.sal_code = s.sal_code
+			AND ss.emp_code = e.emp_code
+			AND e.hr_code = h.hr_code
+			AND e.dep_code = d.dep_code
+			ORDER BY ss_code DESC
+	</select>
+
+	<!-- 강재현 - 전표 관리 - 급여 전표 상세 페이지 -->
+	<select id="getsaStamentDetail" resultMap="salaryStatementMap">
+		SELECT ss.*, s.*, e.*, h.*, d.* 
+			FROM salary_statement ss, salary s, employee e, hr_code h, department d
+			WHERE ss.sal_code = s.sal_code
+			AND ss.emp_code = e.emp_code
+			AND e.hr_code = h.hr_code
+			AND e.dep_code = d.dep_code
+			AND ss_code = #{ss_code}
+			ORDER BY ss_code DESC
+	</select>
+	
+	<!-- 강재현 - 전표 관리 - 급여 전표 (승인 & 미승인) -->
+	<update id="saupdatestatment"
+		parameterType="com.project.UsERP.vo.SalaryStatementVO">
+		UPDATE salary_statement SET ss_state=#{ss_state},
+			ss_sal_date=#{ss_sal_date} WHERE ss_code = #{ss_code}
+	</update>
+	<!--  -->
+	
+	<!-- 이재홍 - 전표 관리 - 채권/채무 조회 -->
+   	<select id="bondDebtList" resultMap="AccsMap">
+      SELECT a.*, c.com_name
+         FROM account_statement a, company c
+         WHERE a.com_code = c.com_code
+         ORDER BY accs_code DESC
+  	 </select>
+   
+   	<!-- 이재홍 - 전표 관리 - 채권/채무 상세페이지 -->
+   	<select id="bdStatementDetail" resultMap="AccsMap">
+      SELECT a.*, e.emp_name, p.pro_name, c.com_name
+      FROM employee e, account_statement a, product p, company c
+      WHERE a.emp_code = e.emp_code
+      AND a.pro_code = p.pro_code
+      AND a.com_code = c.com_code
+      AND accs_code = #{num}
+      ORDER BY accs_code DESC
+   </select>
+   
+</mapper>

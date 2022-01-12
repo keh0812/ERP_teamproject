@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.project.UsERP.persistence.WaDAO">
+	
+	<resultMap id="commuteMap" type="com.project.UsERP.vo.CommuteVO">
+      <id     property="cm_code"      column="cm_code" />  
+      <result property="cm_date" 	   column="cm_date" />
+      <result property="cm_start"      column="cm_start" />
+      <result property="cm_end"      column="cm_end" />
+      <result property="cm_night_time"      column="cm_night_time" />
+      <result property="cm_over_time"      column="cm_over_time" />
+      <result property="cm_address"      column="cm_address" />
+      <result property="emp_code"      column="emp_code" />
+	  <association property="employee" javaType="com.project.UsERP.vo.EmployeeVO">  
+	  	<id     property="emp_code"   column="emp_code" />  
+		<result property="emp_name"  column="emp_name" />
+		<result property="emp_cos"  column="emp_cos" />
+		<result property="emp_bank"  column="emp_bank" />
+		<result property="emp_account"  column="emp_account" />
+	 </association>  
+	 </resultMap>
+	 
+	 <resultMap id="waMap" type="com.project.UsERP.vo.WorkRecordVO">
+      <id     property="wr_code"      column="wr_code" />  
+      <result property="wr_ap_date"      column="wr_ap_date" />
+      <result property="wr_va_start"      column="wr_va_start" />
+      <result property="wr_va_end"      column="wr_va_end" />
+      <result property="wr_va_reason"      column="wr_va_reason" />
+      <result property="wr_state"      column="wr_state" />
+      <result property="emp_code"      column="emp_code" />
+      <result property="dep_code"      column="dep_code" />
+      <result property="hr_code"      column="hr_code" />
+	  <association property="employee" javaType="com.project.UsERP.vo.EmployeeVO">  
+	  	<id     property="emp_code"   column="emp_code" />  
+		<result property="emp_name"  column="emp_name" />
+		<result property="emp_cos"  column="emp_cos" />
+		<result property="emp_bank"  column="emp_bank" />
+		<result property="emp_account"  column="emp_account" />
+	 </association> 
+	 <association property="hrCode" javaType="com.project.UsERP.vo.HrCodeVO">  
+	  	<id     property="hr_code"   column="hr_code" />  
+		<result property="hr_code_name"  column="hr_code_name" />
+		<result property="hr_state"  column="hr_state" />
+		<result property="hcg_code"  column="hcg_code" />
+	 </association> 
+	 <association property="department" javaType="com.project.UsERP.vo.DepartmentVO">  
+	  	<id     property="dep_code"   column="dep_code" />  
+		<result property="dep_name"  column="dep_name" />
+		<result property="dep_state"  column="dep_state" />
+	 </association> 
+	 </resultMap>
+	 
+	 <resultMap id="empMap" type="com.project.UsERP.vo.EmployeeVO">
+		<id     property="emp_code"   column="emp_code" />  
+		<result property="emp_name"  column="emp_name" />
+		<association property="department" javaType="com.project.UsERP.vo.DepartmentVO">
+			<id     property="dep_code"   column="dep_code" />  
+			<result property="dep_name" column="dep_name" />
+		</association> 
+	</resultMap>
+	
+	<!-- 김은희 - 출퇴근 조회 -->
+	<select id="commuteList" resultMap="commuteMap">
+		SELECT c.cm_code, c.cm_date, c.cm_start, c.cm_end, c.cm_night_time, c.cm_over_time, c.cm_address, e.emp_name, e.emp_code
+		  FROM commute c , employee e
+		 WHERE c.emp_code = e.emp_code
+		 ORDER BY cm_code
+	</select>
+	
+	<!-- 김은희 - 근태 조회  -->
+	<select id="waList" resultMap="waMap">
+		SELECT e.emp_code, e.emp_name, e.dep_code, w.wr_code, w.wr_state, h.hr_code_name, w.wr_ap_date, w.wr_va_start, w.wr_va_end, w.wr_va_reason, d.dep_name
+		  FROM employee e, work_record w, department d, hr_code h
+		 WHERE e.emp_code = w.emp_code
+		   AND d.dep_code = w.dep_code
+		   AND h.hr_code = w.hr_code
+		 ORDER BY wr_ap_date
+	</select>
+	
+	<!-- 김은희 - 근태 신청 사번확인  -->
+ 	<select id="empComfirm" parameterType="String" resultMap="empMap">
+ 		SELECT e.emp_code, e.emp_name, d.dep_name, d.dep_code
+ 		  FROM employee e, department d
+ 		 WHERE e.dep_code = d.dep_code
+ 		   AND e.emp_code = #{emp_code}
+ 	</select>
+ 	
+ 	<!-- 김은희 - 근태 신청  -->
+ 	<insert id="waAppInsert" parameterType="java.util.Map" >
+ 		INSERT INTO work_record (wr_code, wr_ap_date, wr_va_start, wr_va_end, wr_va_reason, wr_state, emp_code, hr_code, dep_code)
+     		VALUES (wr_seq.nextval, default, TO_DATE(#{wr_va_start},'YY-MM-DD'), TO_DATE(#{wr_va_end},'YY-MM-DD'), #{vo.wr_va_reason}, #{vo.wr_state}, #{vo.emp_code}, #{vo.hr_code}, #{vo.dep_code})
+ 	</insert>
+ 	
+ 	<!-- 김은희 - 출근 버튼 클릭 -->
+ 	<insert id="waStartClick" parameterType="java.util.Map" >
+ 		INSERT INTO commute (cm_code, cm_date, cm_start, emp_code)
+     		VALUES (cm_seq.nextval, #{date}, #{date}, #{emp_code})
+ 	</insert>
+ 	
+ 	<!-- 김은희 - 퇴근 처리 가져오기  -->
+ 	<select id="waEndSelect" resultType="com.project.UsERP.vo.CommuteVO">
+ 		SELECT cm_code, emp_code, cm_start, cm_end, cm_night_time, cm_over_time, cm_date 
+		  FROM commute 
+		 WHERE emp_code = #{emp_code}
+		 AND to_char(#{date}) = to_char(#{date}) 
+ 	</select>
+ 	
+ 	<!-- 김은희 - 퇴근 처리 업데이트 -->
+ 	<update id="waEndAction" parameterType="java.util.Map" >
+ 		UPDATE commute SET cm_end=#{date}
+         WHERE emp_code = #{emp_code}
+         AND to_char(#{date}) = to_char(#{date}) 
+ 	</update>
+ 	
+ 	<!-- 김은희 - 야근 버튼 클릭 -->
+ 	<update id="waNightClick" parameterType="java.util.Map" >
+ 		UPDATE commute SET cm_night_time=#{cm_night_time}, cm_end=#{cm_end, jdbcType=VARCHAR}
+         WHERE emp_code = #{emp_code}
+ 	</update>
+ 	
+ 	<!-- 김은희 - 인사 코드 조회 - 근태유형 -->
+	<select id="waCodeTyList" resultType="com.project.UsERP.vo.HrCodeVO">
+		SELECT * FROM hr_code WHERE hcg_code = 4 ORDER BY hr_code
+	</select>
+	
+	<!-- 김은희 - 근태 신청 조회  -->
+	<select id="waAppSelect" resultMap="waMap">
+		SELECT e.emp_code, e.emp_name, e.dep_code, w.wr_code, w.wr_state, h.hr_code_name, w.wr_ap_date, w.wr_va_start, w.wr_va_end, w.wr_va_reason, d.dep_name
+		  FROM employee e, work_record w, department d, hr_code h
+		 WHERE e.emp_code = w.emp_code
+		   AND d.dep_code = w.dep_code
+		   AND h.hr_code = w.hr_code
+           AND w.wr_state = 0
+		 ORDER BY wr_ap_date
+	</select>
+	
+	<!-- 김은희 - 근태 신청 승인 상세페이지 -->
+	<select id="waDetail" resultMap="waMap">
+		SELECT e.emp_code, e.emp_name, e.dep_code, h.hr_code, h.hr_code_name, w.wr_ap_date, w.wr_va_start, w.wr_va_end, w.wr_va_reason, d.dep_name
+		  FROM employee e, work_record w, department d, hr_code h
+		 WHERE e.emp_code = w.emp_code
+		   AND d.dep_code = w.dep_code
+		   AND h.hr_code = w.hr_code
+           AND e.emp_code = #{emp_code}
+		 ORDER BY wr_ap_date
+	</select>
+	
+	<!-- 김은희 - 근태 신청 승인 처리 -->
+ 	<update id="waConfirmAction" parameterType="String" >
+ 		UPDATE work_record SET wr_state = 1
+         WHERE emp_code = #{emp_code}
+ 	</update>
+ 	
+ 	<!-- 김은희 - 근태 신청 철회 처리 -->
+ 	<delete id="waDeleteAction" parameterType="String" >
+ 		DELETE work_record 
+ 		WHERE emp_code = #{emp_code}
+ 	</delete>
+ 	
+
+</mapper>

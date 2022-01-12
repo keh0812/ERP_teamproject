@@ -1,0 +1,558 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace="com.project.UsERP.persistence.LdDAO">
+	
+	<!-- 김민수 - 재고VO resultMap -->
+	<resultMap id="stockVOMap" type="com.project.UsERP.vo.StockVO">
+		<id property="sto_code" column="sto_code" />
+		<result property="sto_quantity" column="sto_quantity" />
+		<result property="sto_reg_date" column="sto_reg_date" />
+		<result property="ware_code" column="ware_code" />
+		<result property="pro_code" column="pro_code" />
+		<association property="warehouse" javaType="com.project.UsERP.vo.WarehouseVO">
+			<id property="ware_code" column="ware_code" />
+			<result property="ware_name" column="ware_name" />
+			<result property="ware_location" column="ware_location" />
+			<result property="ware_state" column="ware_state" />
+			<result property="ware_type" column="ware_type" />
+		</association>
+		<association property="product" javaType="com.project.UsERP.vo.ProductVO">
+			<id property="pro_code" column="pro_code" />
+			<result property="pro_name" column="pro_name" />
+			<result property="pro_pur_price" column="pro_pur_price" />
+			<result property="pro_sal_price" column="pro_sal_price" />
+			<result property="pro_state" column="pro_state" />
+			<result property="pro_reg_date" column="pro_reg_date" />
+		</association>
+	</resultMap>
+	
+	<!-- 최유성 - 리절트맵 --><!-- resultType = "com.project.UsERP.vo.LogisticsStatementVO" -->
+	<resultMap id="stockOrder" type="com.project.UsERP.vo.LogisticsStatementVO">
+		<id       property="logs_code"   column="logs_code"/>
+		<result   property="logs_type"      column="logs_type"/>
+		<result   property="logs_reg_date"         column="logs_reg_date"/>
+		<result   property="logs_update_date"      column="logs_update_date"/>
+		<result   property="logs_state"      column="logs_state"/>
+		<result   property="logs_quantity"      column="logs_quantity"/>
+		<result   property="logs_shortage"      column="logs_shortage"/>
+		<result   property="com_code"      column="com_code"/>
+		<result   property="sto_code"   column="sto_code"/>
+		<result   property="pro_code"   column="pro_code"/>
+		<result   property="emp_code"   column="emp_code"/>
+		<result   property="ware_code"   column="ware_code"/>
+		
+		<association property="company" javaType="com.project.UsERP.vo.CompanyVO">
+		   <id       property="com_code"   column="com_code"/>
+		   <result   property="com_name"   column="com_name"/>
+		</association>
+		<association property="product" javaType="com.project.UsERP.vo.ProductVO">
+		   <id       property="pro_code"   column="pro_code"/>
+		   <result   property="pro_name"  column="pro_name"/>
+		</association>
+		<association property="employee" javaType="com.project.UsERP.vo.EmployeeVO">
+		   <id       property="emp_code"   column="emp_code"/>
+		   <result   property="emp_name"  column="emp_name"/>
+		</association>
+		<association property="warehouse" javaType="com.project.UsERP.vo.WarehouseVO">
+		   <id       property="ware_code"   column="ware_code"/>
+		   <result   property="ware_name"   column="ware_name"/>
+		   <result   property="ware_location"   column="ware_location"/>
+		   <result   property="ware_state"   column="ware_state"/>
+		   <result   property="ware_type"   column="ware_type"/>
+		</association>
+		<association property="stock" javaType="com.project.UsERP.vo.StockVO">
+		   <id       property="sto_code"   column="sto_code"/>
+		   <result   property="sto_quantity"  column="sto_quantity"/>
+		   <result   property="sto_reg_date"  column="sto_reg_date"/>
+		   <result   property="ware_code"  column="ware_code"/>
+		   <result   property="pro_code"  column="pro_code"/>
+		   <result   property="ware_code"  column="ware_code"/>
+		   <result   property="pro_code"  column="pro_code"/>
+		</association>
+    </resultMap>
+	
+	<!-- 김민수 - 재고수불부VO resultMap -->
+	<resultMap id="supplyVOMap" type="com.project.UsERP.vo.StockSupplyVO" >
+		<id property="stsu_code" column="stsu_code" />
+		<result property="stsu_reg_date" column="stsu_reg_date" />
+		<result property="stsu_type" column="stsu_type" />
+		<result property="stsu_quantity" column="stsu_quantity" />
+		<result property="stsu_content" column="stsu_content" />
+		<result property="stsu_amount" column="stsu_amount" />
+		<result property="stsu_startwh" column="stsu_startwh" />
+		<result property="stsu_arrivewh" column="stsu_arrivewh" />
+		<result property="sto_code" column="sto_code" />
+		<result property="pro_code" column="pro_code" />
+		<result property="emp_code" column="emp_code" />
+		<association property="stock" javaType="com.project.UsERP.vo.StockVO">
+			<id property="sto_code" column="sto_code" />
+			<result property="sto_quantity" column="sto_quantity" />
+			<result property="sto_reg_date" column="sto_reg_date" />
+		</association>
+		<association property="product" javaType="com.project.UsERP.vo.ProductVO">
+			<id property="pro_code" column="pro_code" />
+			<result property="pro_name" column="pro_name" />
+			<result property="pro_pur_price" column="pro_pur_price" />
+			<result property="pro_sal_price" column="pro_sal_price" />
+			<result property="pro_state" column="pro_state" />
+			<result property="pro_reg_date" column="pro_reg_date" />
+		</association>
+		<association property="employee" javaType="com.project.UsERP.vo.EmployeeVO">
+			<id property="emp_code" column="emp_code" />
+			<result property="emp_name" column="emp_name" />
+		</association>
+	
+	</resultMap>
+	
+	<!-- 김민수 - 기초등록 - 창고 목록 -->
+	<select id="warehouseList" resultType="com.project.UsERP.vo.WarehouseVO">
+		SELECT * FROM warehouse ORDER BY ware_code
+	</select>
+	
+	<!-- 김민수 - 기초등록 - 창고 상세 목록 -->
+	<select id="warehouseDetail" resultType="com.project.UsERP.vo.WarehouseVO">
+		SELECT * FROM warehouse WHERE ware_code = #{ware_code}
+	</select>
+	
+	<!-- 김민수 - 기초등록 - 창고 정보 수정 -->
+	<select id="warehouseModify" parameterType="com.project.UsERP.vo.WarehouseVO" resultType="int">
+		UPDATE warehouse
+		SET ware_name = #{ware_name}, ware_location = #{ware_location} , ware_state = #{ware_state}
+		WHERE ware_code = #{ware_code}
+	</select>
+	
+	<!-- 김민수 -  기초등록 - 거래처 갯수 구하기 -->
+	<select id="getCompanyCnt" resultType="int" parameterType="String">
+		SELECT COUNT(*) AS selectCnt 
+		FROM company 
+		WHERE com_code LIKE '%'||#{compKeyword}||'%' 
+		OR com_name LIKE '%'||#{compKeyword}||'%'
+	</select>
+	
+	<!-- 김민수 - 기초등록 - 거래처 조회 -->
+	<select id="CompanyList" parameterType="java.util.Map" resultType="com.project.UsERP.vo.CompanyVO">
+		<![CDATA[
+		SELECT *
+			FROM (SELECT com_code, com_type, com_name, com_ceo_name,
+						com_reg_no, com_address, com_reg_date, rownum rnum
+    			FROM (SELECT * FROM company 
+	    				WHERE com_code LIKE '%'||#{compKeyword}||'%' 
+						OR com_name LIKE '%'||#{compKeyword}||'%'
+	    				ORDER BY com_code))
+    			WHERE rnum >= #{start} 
+    			AND rnum <= #{end}
+		]]>
+	</select>
+	
+	<!-- 김민수 - 기초등록 - 거래처 상세 페이지 -->
+	<select id="companyDetail" resultType="com.project.UsERP.vo.CompanyVO" parameterType="int">
+		SELECT * FROM company WHERE com_code = #{com_code}
+	</select>
+	
+	<!-- 김민수 - 기초등록 - 상품 갯수 -->
+	<select id="getProductCnt" resultType="int" parameterType="String">
+		SELECT count(*) as cnt FROM product
+		WHERE pro_code LIKE '%'||#{proKeyword}||'%' 
+		OR pro_name LIKE '%'||#{proKeyword}||'%'
+	</select>
+	
+	<!-- 김민수 - 기초등록 - 검색 포함 상품 조회 -->
+	<select id="ProductList" resultType="com.project.UsERP.vo.ProductVO" parameterType="java.util.Map">
+		<![CDATA[
+			SELECT *
+			FROM (SELECT pro_code, pro_name, pro_pur_price, pro_sal_price, 
+						pro_state, pro_reg_date, rownum rnum
+			    FROM (SELECT * FROM product 
+					    WHERE pro_code LIKE '%'||#{proKeyword}||'%' 
+						OR pro_name LIKE '%'||#{proKeyword}||'%'
+					    ORDER BY pro_code))
+			    WHERE rnum >= #{start} 
+	  			AND rnum <= #{end}
+		]]>
+	</select>
+	
+	<!-- 김민수 - 재고관리 - 재고 현황 갯수 -->
+	<select id="getStockCnt" resultType="int">
+		SELECT COUNT(*) as cnt
+		FROM stock s,product p, warehouse w
+		WHERE s.pro_code = p.pro_code
+		AND s.ware_code = w.ware_code
+		AND w.ware_state = 1
+		AND p.pro_state = 1
+		AND p.pro_name LIKE '%'||#{ssKeyword}||'%'
+	</select>
+	
+	<!-- 김민수 - 재고관리 - 재고 현황 조회 -->
+	<select id="StockStatusList" resultMap="stockVOMap" parameterType="java.util.Map">
+		<![CDATA[
+			SELECT * 
+			FROM (SELECT sto_code, sto_quantity, sto_reg_date, ware_code, pro_code, ware_name, pro_name, 
+        			pro_pur_price, pro_sal_price, pro_state, rownum rnum
+			    FROM(SELECT s.*, w.ware_name, p.pro_name, p.pro_pur_price, 
+            			p.pro_sal_price, p.pro_state
+			        FROM stock s, warehouse w, product p
+			        WHERE s.ware_code = w.ware_code
+			        AND s.pro_code = p.pro_code
+			        AND w.ware_state = 1
+			        AND p.pro_state = 1
+			        AND p.pro_name LIKE '%'||#{ssKeyword}||'%'
+			        ORDER BY s.pro_code, s.ware_code
+			        )
+				)
+			WHERE rnum >= #{start}
+			AND rnum <= #{end}
+		]]>
+	</select>
+	
+	<!-- 김민수 - 재고관리 - 상품 조회 -->
+	<select id="selectProduct" resultType="com.project.UsERP.vo.ProductVO">
+		SELECT * FROM product WHERE pro_state = 1
+	</select>
+	
+	<!-- 김민수 - 재고관리 - 창고 조회 -->
+	<select id="selectWarehouse" resultType="com.project.UsERP.vo.WarehouseVO">
+		SELECT * FROM warehouse WHERE ware_state = 1
+	</select>
+	
+	<!-- 김민수 - 재고관리 - 재고 이동 재고테이블 가져오기 -->
+	<select id="stockDefaultList" resultType="com.project.UsERP.vo.StockVO">
+		SELECT sto_quantity, ware_code, pro_code FROM stock
+	</select>
+	
+	<!-- 김민수 - 재고관리 - 재고 이동 재고테이블 여부 확인 -->
+	<select id="stockState" resultType="com.project.UsERP.vo.StockVO" parameterType="java.util.Map">
+		SELECT * FROM stock
+		WHERE ware_code = #{arrivewh}
+		AND pro_code = #{prod}
+	</select>
+	
+	<!-- 김민수 - 재고관리 - 재고 이동 재고 테이블 불량품 창고 등록 -->
+	<insert id="stockBadWare" parameterType="com.project.UsERP.vo.StockVO">
+		INSERT INTO stock(sto_code, sto_quantity, sto_reg_date, ware_code, pro_code)
+		VALUES (sto_seq.nextval, #{sto_quantity}, sysdate, #{ware_code}, #{pro_code})
+	</insert>
+	
+	<!-- 김민수 - 재고관리 - 재고 이동 출발창고 수량 변경 -->
+	<update id="stoMinusUpdate" parameterType="java.util.Map">
+		UPDATE stock SET sto_quantity = sto_quantity-#{amount}
+		WHERE ware_code = #{startwh}
+		AND pro_code = #{prod}
+	</update>
+	
+	<!-- 김민수 - 재고관리 - 재고 이동 도착창고 수량 변경 -->
+	<update id="stoPlusUpdate" parameterType="java.util.Map">
+		UPDATE stock SET sto_quantity = sto_quantity+#{amount}
+		WHERE ware_code = #{arrivewh}
+		AND pro_code = #{prod}
+	</update>
+	
+	<!-- 김민수 - 재고관리 - 재고 이동 재고테이블 수량 가져오기 -->
+	<select id="getStoQuantity" resultType="String" parameterType="java.util.Map">
+		SELECT sto_quantity
+		FROM stock
+		WHERE ware_code = #{startwh}
+		AND pro_code = #{prod}
+	</select>
+	
+	<!-- 김민수 - 재고관리 - 재고 이동  출발창고이름 가져오기 -->
+	<select id="getStartWareName" resultType="String" parameterType="int">
+		SELECT ware_name FROM warehouse WHERE ware_code = #{startwh}
+	</select>
+	
+	<!-- 김민수 - 재고관리 - 재고 이동  도착창고이름 가져오기 -->
+	<select id="getArriveWareName" resultType="String" parameterType="int">
+		SELECT ware_name FROM warehouse WHERE ware_code = #{arrivewh}
+	</select>
+	
+	<!-- 김민수 - 재고관리 - 재고 이동 재고수불부 등록 -->
+	<insert id="stsuMoveInsert" parameterType="com.project.UsERP.vo.StockSupplyVO">
+		INSERT INTO stock_supply(stsu_code, stsu_reg_date, stsu_type, stsu_quantity, 
+					stsu_amount, stsu_startwh, stsu_arrivewh, pro_code, emp_code)
+		VALUES (stsu_seq.nextval, sysdate, 3, #{stsu_quantity}, #{stsu_amount}, 
+						#{stsu_startwh}, #{stsu_arrivewh}, #{pro_code}, #{emp_code})
+	</insert>
+	
+	<!-- 김민수 - 재고 이동 출고전표 상태 변경 -->
+	<update id="moveSoStateUpdate" parameterType="int">
+		UPDATE logistics_statement
+		SET logs_state = 2, logs_update_date = sysdate
+		WHERE logs_code = #{logs_code}
+		AND logs_type = 6
+	</update>
+	
+	<!-- 김민수 - 재고 이동 출고내역 재고수불부 등록 -->
+	<insert id="stsuStockOutInsert" parameterType="com.project.UsERP.vo.StockSupplyVO">
+		INSERT INTO stock_supply(stsu_code, stsu_reg_date, stsu_type, stsu_quantity, stsu_amount, stsu_arrivewh, pro_code, emp_code)
+		VALUES (stsu_seq.nextval, sysdate, 2, #{stsu_quantity}, #{stsu_amount}, #{stsu_arrivewh}, #{pro_code}, #{emp_code})
+	</insert>
+	
+	<!-- 김민수 - 재고 조정 등록 -->
+	<insert id="adjustmentInsert" parameterType="com.project.UsERP.vo.StockSupplyVO">
+		INSERT INTO stock_supply(stsu_code, stsu_reg_date, stsu_type, stsu_quantity, 
+								stsu_amount, stsu_arrivewh, pro_code, emp_code)
+		VALUES (stsu_seq.nextval, sysdate, 4, #{stsu_quantity}, 
+				#{stsu_amount}, #{stsu_arrivewh}, #{pro_code}, #{emp_code})
+	</insert>
+	
+	<!-- 김민수 - 재고 조정 갯수 구하기 -->
+	<select id="getAdjustment" resultType="int">
+		SELECT COUNT(*) FROM stock_supply WHERE stsu_type = 4
+	</select>
+	
+	<!-- 김민수 - 재고 조정 내역 조회 -->
+	<select id="adjustmentList" resultMap="supplyVOMap" parameterType="java.util.Map">
+		<![CDATA[
+			SELECT *
+			FROM (SELECT stsu_code, stsu_reg_date, stsu_quantity, stsu_amount, 
+					stsu_arrivewh, pro_code, pro_name, emp_name, rownum rnum
+			    FROM (SELECT su.*, p.pro_name, e.emp_name
+			        FROM stock_supply su, product p, employee e
+			        WHERE su.pro_code = p.pro_code
+			        AND su.emp_code = e.emp_code
+			        AND su.stsu_type = 4
+			        ORDER BY su.stsu_reg_date DESC
+			        )
+			    )
+			WHERE rnum >= #{start}
+			AND rnum <= #{end}
+		]]>
+	</select>
+	
+	<!-- 김민수 - 재고수불부 상품 코드 가져오기 -->
+	<select id="getProCode" parameterType="String" resultType="String">
+		SELECT pro_code FROM product WHERE pro_name = #{proname}
+	</select>
+	
+	<!-- 김민수 - 재고수불부 내역 조회 -->
+	<select id="stockSupplyList" resultMap="supplyVOMap" parameterType="java.util.Map">
+		SELECT ss.stsu_reg_date, ss.stsu_type, ss.stsu_amount, ss.stsu_quantity, p.pro_code, p.pro_name
+		FROM stock_supply ss, product p
+		WHERE ss.pro_code = p.pro_code 
+		AND p.pro_code = #{procode}
+		AND ss.stsu_reg_date BETWEEN TO_DATE(#{start}, 'YYYY-MM-DD')
+		                        AND TO_DATE(#{end}, 'YYYY-MM-DD')
+		ORDER BY ss.stsu_reg_date
+	</select>
+	
+	<!-- 김민수 - 부족수량 출고물류전표 가져오기 -->
+   <select id="logsCodeSelectList" resultMap="stockOrder">
+      SELECT ls.*, p.pro_name
+      FROM logistics_statement ls, product p
+      WHERE ls.pro_code = p.pro_code
+        AND ls.logs_type = 6
+      AND ls.logs_state = 3
+   </select>
+	
+	<!-- 김민수 - 물류출고전표(부족수량) 부족수량 불러오기 -->
+	<select id="logsShortAgeSelect" resultType="String" parameterType="int">
+		SELECT logs_shortage FROM logistics_statement
+		WHERE logs_code = #{logscode}
+	</select>
+	
+	<!-- 김민수 - 물류출고전표(부족수량) 부족수량 변경 -->
+	<update id="logsShortAgeUpdate" parameterType="java.util.Map">
+		UPDATE logistics_statement
+		SET logs_shortage = #{shortage}
+		WHERE logs_code = #{logscode}
+	</update>
+	
+	<!-- 김민수 - 물류출고전표(부족수량) 출고준비상태로 변경 -->
+	<update id="logsStateUpdate" parameterType="int">
+		UPDATE logistics_statement
+		SET logs_state = 1
+		WHERE logs_code = #{logscode}
+	</update>
+	
+	<!-- 김민수 - 입출고 내역 조회 -->
+	<select id="shiRecList" resultMap="supplyVOMap">
+		SELECT *
+		FROM (SELECT stsu_code, stsu_reg_date, stsu_amount, pro_code, pro_pur_price,
+		        pro_sal_price,pro_name, emp_code, emp_name, stsu_type
+		    FROM (SELECT ss.*, p.pro_name,p.pro_pur_price, p.pro_sal_price, e.emp_name
+		        FROM stock_supply ss, product p, employee e
+		        WHERE ss.pro_code = p.pro_code
+		        AND ss.emp_code = e.emp_code
+		        ORDER BY ss.stsu_reg_date DESC
+		        )
+		    )
+	</select>
+	
+	<!-- 최유성 -  입고 미승인 전표 -->
+	<select id = "stockInOrder1" resultMap="stockOrder">
+		SELECT * 
+		  FROM logistics_statement l
+		  JOIN warehouse w
+    		ON w.ware_code = l.ware_code
+    	  JOIN company c
+		    ON c.com_code = l.com_code
+		  JOIN product p
+		    ON p.pro_code = l.pro_code
+		  JOIN employee e
+		    ON e.emp_code = l.emp_code     
+		 WHERE logs_state = 0
+		   AND logs_type = 5  
+		 order by logs_code desc
+	</select>  
+	
+	<!-- 최유성 - 입고 승인 전표 -->
+	<select id = "stockInOrder2" resultMap="stockOrder">
+		SELECT * 
+		  FROM logistics_statement l
+		  JOIN warehouse w
+    		ON w.ware_code = l.ware_code
+    	  JOIN company c
+		    ON c.com_code = l.com_code
+		  JOIN product p
+		    ON p.pro_code = l.pro_code
+		  JOIN employee e
+		    ON e.emp_code = l.emp_code     
+		 WHERE logs_state = 1
+		   AND logs_type = 5  
+		 order by logs_code desc
+	</select> 
+	
+	<!-- 최유성 - 출고 미승인 전표 -->
+	<select id = "stockOutOrder1" resultMap="stockOrder">
+		SELECT * 
+		  FROM logistics_statement l
+		  JOIN stock s
+		    ON l.sto_code = s.sto_code
+		  JOIN warehouse w
+    		ON w.ware_code = l.ware_code
+    	  JOIN company c
+		    ON c.com_code = l.com_code
+		  JOIN product p
+		    ON p.pro_code = l.pro_code
+		  JOIN employee e
+		    ON e.emp_code = l.emp_code     
+		 WHERE logs_state = 0
+		   AND logs_type = 6    
+		 order by logs_code desc
+	</select>
+	
+	<!-- 최유성 - 출고 승인 전표 -->
+	<select id = "stockOutOrder2" resultMap="stockOrder">
+		SELECT * 
+		  FROM logistics_statement l
+		  JOIN warehouse w
+    		ON w.ware_code = l.ware_code
+    	  JOIN company c
+		    ON c.com_code = l.com_code
+		  JOIN product p
+		    ON p.pro_code = l.pro_code
+		  JOIN employee e
+		    ON e.emp_code = l.emp_code     
+		 WHERE logs_state != 0
+		   AND logs_type = 6
+		 order by logs_code desc
+	</select>  
+	
+	<!-- 최유성 - 입고 승인 버튼 클릭 상태 업데이트 -->
+	<update id = "stockInAction" parameterType="int">
+		UPDATE logistics_statement SET logs_state = 1,logs_update_date=sysdate where logs_code = #{logs_code} and logs_type = 5
+	</update> 
+	
+	<!-- 최유성 - 입고 승인 버튼 클릭 상태 업데이트시 재고코드가 존재하지 않으면(새상품 입고 재고 추가(등록)) -->
+	<insert id="stockInsert" parameterType="java.util.Map">
+		INSERT INTO stock(sto_code, sto_quantity, sto_reg_date, ware_code, pro_code)
+		VALUES (sto_seq.nextval,#{sto_quantity},sysdate,#{ware_code},#{pro_code})
+	</insert>
+	
+	<!-- 최유성 - 입고 관련 재고코드가 존재하지 않을 시 새로 등록한 재고의 재고 코드를 가져오기 -->
+	<select id = "stockCodeSelect" resultType="int" parameterType="java.util.Map">
+		SELECT sto_code
+		  FROM stock
+		 WHERE pro_code=#{pro_code}
+		   AND ware_code = #{ware_code} 
+	</select> 
+	
+	<!-- 최유성 - 재고전표에 널값인 재고코드에 새로 생성한 재고코드를 업데이트 -->
+	<update id = "logisticsStatementUpdate" parameterType="java.util.Map">
+		UPDATE logistics_statement SET sto_code = #{newStoCode} where logs_code = #{logs_code}
+	</update> 
+	
+	<!-- 최유성 입고  - 입고 승인 버튼 클릭 상태 업데이트시 재고 수량 업데이트를 위해서 기존 수량 가져오기 -->
+	<select id = "retrunStoQuantity" resultType="int" parameterType="int">
+		select sto_quantity from stock WHERE sto_code=#{sto_code}
+	</select> 
+	
+	<!-- 최유성 - 입고/출고준비완료로 상태변경 승인 버튼 클릭 상태 업데이트시 재고코드가 존재(기존에 있는 상품) 수량 업데이트 -->
+	<update id = "stockUpdate" parameterType="java.util.Map">
+		UPDATE stock SET sto_quantity = #{sto_quantity} where sto_code = #{sto_code}
+	</update> 
+	
+	<!-- 최유성 - 입고 승인 버튼 클릭 상태 업데이트시 재고 수불부 생성-->
+	<insert id = "stockSupplyInsert" parameterType="java.util.Map">
+		INSERT INTO stock_supply(stsu_code, stsu_reg_date, stsu_type, stsu_quantity, stsu_amount, stsu_content, stsu_startwh, stsu_arrivewh, sto_code, pro_code, emp_code)
+		VALUES (stsu_seq.nextval,sysdate,1,#{stsu_quantity},#{stsu_amount},'입고',null,'양품창고',#{sto_code},#{pro_code},#{emp_code})
+	</insert><!-- 나중에 수정해야 함...!!!!!!!!!!! 마지막 사원코드는 세션아이디로? -->
+	
+	<!-- 최유성 - 출고 준비 완료로 상태 업데이트 -->
+	<update id = "stockOutReady" parameterType="java.util.Map">
+		UPDATE logistics_statement SET logs_state = 1,logs_update_date=sysdate, sto_code=#{sto_code}, ware_code=#{ware_code} where logs_code = #{logs_code} and logs_type =6 
+	</update> 
+	
+	<!-- 최유성 - 출고대기창고 관련  해당 상품에 대한 재고코드 및 재고수량 가져오기 -->
+	<select id = "outReadyStockSelect" resultType="com.project.UsERP.vo.StockVO" parameterType="int">
+		SELECT *
+      	  FROM stock s
+      	  JOIN warehouse w
+        	ON w.ware_code = s.ware_code
+   		 WHERE s.pro_code = #{pro_code}    
+   		   AND w.ware_code = #{ware_code}
+	</select>  
+	
+	<!-- 최유성 - 양품창고에서 출고대기 창고로 재고 이동하는 재고수불부 등록 -->
+	<insert id = "outReadystockSupplyInsert" parameterType="java.util.Map">
+		INSERT INTO stock_supply(stsu_code, stsu_reg_date, stsu_type, stsu_quantity, stsu_amount, stsu_content, stsu_startwh, stsu_arrivewh, sto_code, pro_code, emp_code)
+		VALUES (stsu_seq.nextval,sysdate,3,#{stsu_quantity},#{stsu_amount},'출고준비','양품창고','출고대기창고',#{sto_code},#{pro_code},#{emp_code})
+	</insert>
+	
+	<!-- 최유성 - 출고 승인 버튼 클릭 - 출고준비완료로 상태 업데이트시 해당상품에 대한 출고대기창고에 재고코드가 존재하지 않으면 해당 재고 등록 -->
+	<insert id="outStockInsert" parameterType="java.util.Map">
+		INSERT INTO stock(sto_code, sto_quantity, sto_reg_date, ware_code, pro_code)
+		VALUES (sto_seq.nextval,#{sto_quantity},sysdate,#{ware_code},#{pro_code})
+	</insert>
+	
+	<!-- 최유성 - 입고 관련 재고코드가 존재하지 않을 시 새로 등록한 재고의 재고 코드를 가져오기 -->
+	<select id = "outStockCodeSelect" resultType="com.project.UsERP.vo.StockVO" parameterType="java.util.Map">
+		SELECT *
+		  FROM stock
+		 WHERE pro_code=#{pro_code}
+		   AND ware_code = #{ware_code} 
+	</select> 
+	
+	<!-- 최유성 - 물류 전표 상세 페이지(전표 상세 정보) -->
+	<select id = "getLdDetail" resultMap="stockOrder" parameterType="int">
+		SELECT * 
+		  FROM logistics_statement l
+    	  JOIN company c
+		    ON c.com_code = l.com_code
+		  JOIN product p
+		    ON p.pro_code = l.pro_code
+		  JOIN employee e
+		    ON e.emp_code = l.emp_code
+		  JOIN warehouse w
+		    ON w.ware_code = l.ware_code      
+		 WHERE logs_code = #{logs_code}
+	</select> 
+	
+	<!-- 최유성 전표 물류전표 부족수량 업데이트  -->
+    <update id="shortageLogsupdate" parameterType="java.util.Map">
+       UPDATE logistics_statement
+       SET logs_state = #{logs_state}
+       WHERE logs_code = #{logs_code}
+    </update> 
+   
+   <!-- 구매팀한테 요청보내기 -->
+   <update id="logsupdate" parameterType="com.project.UsERP.vo.LogisticsStatementVO">
+		UPDATE logistics_statement SET logs_state=#{logs_state} 
+			WHERE logs_code = #{logs_code}
+	</update>
+   
+   
+</mapper>

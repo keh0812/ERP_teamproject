@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper
+    PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+    "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+    
+<mapper namespace = "com.project.UsERP.persistence.AdminDAO">
+	
+	<resultMap id="empMap" type="com.project.UsERP.vo.EmployeeVO">
+		<id     property="emp_code"   column="emp_code" />  
+		<result property="emp_pwd" column="emp_pwd" />
+		<result property="emp_authority"  column="emp_authority" />
+		<result property="emp_enabled"  column="emp_enabled" />
+		<result property="emp_name"  column="emp_name" />
+		<result property="emp_hire_date"  column="emp_hire_date" />
+		<result property="emp_cos"  column="emp_cos" />
+		<result property="emp_photo"  column="emp_photo" />
+		<result property="emp_jumin"  column="emp_jumin" />
+		<result property="emp_address"  column="emp_address" />
+		<result property="emp_tel"  column="emp_tel" />
+		<result property="emp_phone"  column="emp_phone" />
+		<result property="emp_email"  column="emp_email" />
+		<result property="emp_port_no"  column="emp_port_no" />
+		<result property="emp_bank"  column="emp_bank" />
+		<result property="emp_account"  column="emp_account" />
+		<result property="dep_code"  column="dep_code" />
+		<result property="hr_code"  column="hr_code" />
+		<association property="department" javaType="com.project.UsERP.vo.DepartmentVO">
+			<id      property="dep_code"   column="dep_code" />  
+			<result property="dep_name" column="dep_name" />
+			<result property="dep_state"  column="dep_state" />
+		</association> 
+		<association property="hrCode" javaType="com.project.UsERP.vo.HrCodeVO">
+			<id      property="hr_code"   column="hr_code" />  
+			<result property="hr_code_name" column="hr_code_name" />
+			<result property="hr_state"  column="hr_state" />
+			<result property="hcg_code"  column="hcg_code" />
+		</association> 
+	</resultMap>
+
+	<!-- 강재현 - 중복확인 처리 -->
+	<select id = "idCheck" resultType = "int">
+		SELECT COUNT(*) FROM employee WHERE emp_code = #{strId}
+	</select>
+	
+	<!-- 강재현 - 로그인 처리 -->
+	<select id = "pwdCheck" resultType = "String">
+		SELECT emp_pwd FROM employee WHERE emp_code = #{strId}
+	</select>
+	
+	<!-- 강재현 - 관리자 or 게스트 확인 -->
+	<select id = "gradeCheck" resultType = "String">
+		SELECT emp_authority FROM employee WHERE emp_code = #{emp_code}
+	</select>
+	
+	<!-- 강재현 - 로그인 정보 처리 -->
+	<select id = "readMember" resultType = "com.project.UsERP.vo.EmployeeVO">
+		SELECT * FROM employee WHERE emp_code = #{str_id}
+	</select>
+	
+	<!-- 조명재 - 회원 정보를 반환한다 -->
+	<select id="getUsersInfo" resultType="com.project.UsERP.vo.EmployeeVO">
+		SELECT * FROM employee WHERE emp_code = #{emp_code}
+	</select>
+	
+	<!-- 김은희 - 내 정보 수정 페이지 -->
+	<select id="myPageDetail" resultMap="empMap">
+		SELECT e.emp_code, e.emp_name, d.dep_code, d.dep_name, c.hr_code, c.hr_code_name, e.emp_hire_date, e.emp_cos, e.emp_jumin, e.emp_address,
+				e.emp_tel, e.emp_authority, e.emp_phone, e.emp_email, e.emp_bank, e.emp_account 
+		  FROM employee e, department d, hr_code c 
+		 WHERE e.dep_code = d.dep_code 
+		   AND e.hr_code = c.hr_code 
+		   AND emp_code = #{emp_code}
+	</select>
+	
+	<!-- 김은희 - 내 정보 수정 처리 -->
+	<update id="mypageUpdateAction" parameterType="com.project.UsERP.vo.EmployeeVO">
+		UPDATE employee SET emp_photo=#{emp_photo, jdbcType=VARCHAR}, emp_jumin=#{emp_jumin}, emp_address=#{emp_address}, emp_tel=#{emp_tel}, emp_phone=#{emp_phone}, emp_email=#{emp_email}, emp_port_no=#{emp_port_no}, emp_account=#{emp_account}, hr_code=#{hr_code}, dep_code=#{dep_code}, emp_bank=#{emp_bank}, emp_cos=#{emp_cos} WHERE emp_code=#{emp_code}
+	</update>
+	
+	<!-- 조명재 - 비밀번호를 생성한다 -->
+	<update id="signinPro" parameterType="java.util.Map">
+		UPDATE employee SET emp_pwd = #{emp_pwd}, emp_enabled = 1 WHERE emp_code = #{emp_code}
+	</update>
+	
+</mapper>	

@@ -1,0 +1,155 @@
+@charset "UTF-8";
+
+/* 날씨 가져오기 */
+/*어제와 같은 기온 맑음 글씨 색*/
+.summary{
+	font-family: "SF UI Display",-apple-system,BlinkMacSystemFont,HelveticaNeue,Helvetica,Roboto,NotosansKR,Arial,"Apple SD Gothic Neo","Malgun Gothic",'맑은고딕',Dotum,'돋움',sans-serif;
+    -webkit-text-size-adjust: none;
+    margin: 0;
+    padding: 0;
+    margin-top: 15px;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 25px;
+    letter-spacing: -.7px;
+    color: #000000;
+    text-align: center;
+}
+
+.card_today .weather_area .summary .temperature {
+    display: inline-block;
+    font-size: 21px;
+    letter-spacing: -.74px;
+    vertical-align: top;
+}
+
+.card_today .weather_area .summary .temperature.down:after {
+	
+    background-position: -655px -15px;
+    background-repeat: no-repeat;
+    width: 8px;
+    height: 16px;
+}
+
+
+.weather_area{
+	background: url("/UsERP/resources/images/weather.png") no-repeat center;
+    font-family: "SF UI Display",-apple-system,BlinkMacSystemFont,HelveticaNeue,Helvetica,Roboto,NotosansKR,Arial,"Apple SD Gothic Neo","Malgun Gothic",'맑은고딕',Dotum,'돋움',sans-serif;
+    font-size: 14px;
+    line-height: 1.25em;
+    -webkit-text-size-adjust: none;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    position: relative;
+    z-index: 5;
+}
+
+.current{
+    font-family: "SF UI Display",-apple-system,BlinkMacSystemFont,HelveticaNeue,Helvetica,Roboto,NotosansKR,Arial,"Apple SD Gothic Neo","Malgun Gothic",'맑은고딕',Dotum,'돋움',sans-serif;
+    -webkit-text-size-adjust: none;
+    text-align: center;
+    display: inline-block;
+    font-size: 60px;
+    line-height: 71px;
+    letter-spacing: -.95px;
+    color: #202020;
+    vertical-align: top;
+}
+
+.blind{
+    font-family: "SF UI Display",-apple-system,BlinkMacSystemFont,HelveticaNeue,Helvetica,Roboto,NotosansKR,Arial,"Apple SD Gothic Neo","Malgun Gothic",'맑은고딕',Dotum,'돋움',sans-serif;
+    -webkit-text-size-adjust: none;
+    text-align: center;
+    font-size: 60px;
+    line-height: 71px;
+    letter-spacing: -.95px;
+    color: #202020;
+    overflow: hidden;
+    position: absolute;
+    clip: rect(0 0 0 0);
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+}
+
+.degree{
+    font-family: "SF UI Display",-apple-system,BlinkMacSystemFont,HelveticaNeue,Helvetica,Roboto,NotosansKR,Arial,"Apple SD Gothic Neo","Malgun Gothic",'맑은고딕',Dotum,'돋움',sans-serif;
+    -webkit-text-size-adjust: none;
+    text-align: center;
+    color: #202020;
+    font-size: 45px;
+    font-weight: 700;
+    line-height: 54px;
+    letter-spacing: -1px;
+    vertical-align: top;
+}
+
+.weather{
+	display: inline-block;
+    vertical-align: top;
+}
+
+.card_today .weather_area .summary .weather.before_slash:before {
+    display: inline-block;
+    margin: 0 6px;
+    opacity: .3;
+    font-size: 16px;
+    line-height: 22px;
+    letter-spacing: -.56px;
+    vertical-align: top;
+    content: '/';
+}
+
+.summary_list{
+    font-family: "SF UI Display",-apple-system,BlinkMacSystemFont,HelveticaNeue,Helvetica,Roboto,NotosansKR,Arial,"Apple SD Gothic Neo","Malgun Gothic",'맑은고딕',Dotum,'돋움',sans-serif;
+    line-height: 1.25em;
+    -webkit-text-size-adjust: none;
+    margin: 0;
+    padding: 0;
+    margin-top: 5px;
+    font-size: 20;
+    text-align: center;
+}
+
+/* 습도, 동풍, 체감 글씨 바꾸는 css*/
+.term{
+    font-family: "SF UI Display",-apple-system,BlinkMacSystemFont,HelveticaNeue,Helvetica,Roboto,NotosansKR,Arial,"Apple SD Gothic Neo","Malgun Gothic",'맑은고딕',Dotum,'돋움',sans-serif;
+    -webkit-text-size-adjust: none;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    display: inline;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 20px;
+    letter-spacing: -.5px;
+    color: #000000;
+}
+
+.desc{
+    font-family: "SF UI Display",-apple-system,BlinkMacSystemFont,HelveticaNeue,Helvetica,Roboto,NotosansKR,Arial,"Apple SD Gothic Neo","Malgun Gothic",'맑은고딕',Dotum,'돋움',sans-serif;
+    -webkit-text-size-adjust: none;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+    margin-left: 5px;
+    margin-right: 15px;
+    font-size: 18px;
+    font-weight: 700;
+    line-height: 20px;
+    letter-spacing: -.5px;
+    color: #424242;
+    vertical-align: top;
+}
+
+.wrap {
+	
+	border-width: 3px;
+	border-color: #8ac5e1;
+	border-style: solid;
+	padding: 10px;
+	width: 500px;
+	margin: 0px auto;
+}
